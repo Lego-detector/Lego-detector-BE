@@ -1,10 +1,19 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+
+import { configuration } from './config';
+import { LegoDetectorModule } from './lego-detector/lego-detector.module';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [    
+    ConfigModule.forRoot({
+      validationSchema: configuration,
+      isGlobal: true,
+    }), LegoDetectorModule,
+  ],
+  providers: [
+    AppService
+  ],
 })
 export class AppModule {}
