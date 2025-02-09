@@ -7,9 +7,9 @@ import { AmqpModule } from 'nestjs-amqp';
 import { AppService } from './app.service';
 import { ENV, envObject } from './config';
 import {
-  CdcListenerModule,
   DetectorModule,
   InferenceResultHandlerModule,
+  MSGRelayModule,
   MinioClientModule,
   UserModule,
 } from './modules';
@@ -43,7 +43,7 @@ import { RabbitMqModule } from './modules/worker-modules/rabbit-mq/rabbit-mq.mod
     DetectorModule,
     UserModule,
     AdminModule,
-    CdcListenerModule,
+    MSGRelayModule,
     InferenceResultHandlerModule,
     RabbitMqModule,
   ],
