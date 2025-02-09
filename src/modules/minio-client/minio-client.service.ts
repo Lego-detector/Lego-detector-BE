@@ -1,11 +1,9 @@
-
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import * as Minio from 'minio';
 
 import { ENV } from 'src/config';
-
 
 @Injectable()
 export class MinioClientService {

@@ -4,14 +4,14 @@ import { BoundingBoxDocument, HistoryDocument } from '../../schemas';
 import { HistoryMapper } from '../mapper';
 
 export class HistoryEntity extends BaseEntity<HistoryDocument> {
-    results: BoundingBoxDocument[] = []
-    
-    constructor(history: Partial<HistoryDocument>) {
-        super();
-        Object.assign(this, history);
-    }
+  results: BoundingBoxDocument[] = [];
 
-    toDocument(): Partial<HistoryDocument> {
-        return new HistoryMapper().toDocument(this);
-    }
+  constructor(history: Partial<HistoryDocument>) {
+    super();
+    Object.assign(this, history);
+  }
+
+  toDocument(): Partial<HistoryDocument> {
+    return new HistoryMapper().toDocument(this);
+  }
 }

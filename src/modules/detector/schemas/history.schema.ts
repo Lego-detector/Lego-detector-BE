@@ -6,20 +6,19 @@ import { COLLECTION_NAME } from 'src/shared';
 
 import { BoundingBox, BoundingBoxSchema } from './bounding-box.schema';
 
-export type HistoryDocument = HydratedDocument<History>
+export type HistoryDocument = HydratedDocument<History>;
 
 @Schema({
-    collection: COLLECTION_NAME.HISTORIES,
-    timestamps: true,
-    versionKey: false
+  collection: COLLECTION_NAME.HISTORIES,
+  timestamps: true,
+  versionKey: false,
 })
 export class History {
-    @Prop({ required: false })
-    imageUrl: string;
-  
-    @Prop({ type: [BoundingBoxSchema], default: [] })
-    results: BoundingBox[];
-}
+  @Prop({ required: false })
+  imageUrl: string;
 
+  @Prop({ type: [BoundingBoxSchema], default: [] })
+  results: BoundingBox[];
+}
 
 export const HistorySchema = SchemaFactory.createForClass(History);

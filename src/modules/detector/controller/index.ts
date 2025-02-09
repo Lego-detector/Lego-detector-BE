@@ -1,1 +1,1 @@
-export * from './detector.controller'
+export * from './detector.controller';

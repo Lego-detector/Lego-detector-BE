@@ -1,1 +1,1 @@
-export * from './schema-constraint.constant'
+export * from './schema-constraint.constant';
