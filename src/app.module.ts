@@ -6,39 +6,38 @@ import { AmqpModule } from 'nestjs-amqp';
 
 import { AppService } from './app.service';
 import { ENV, envObject } from './config';
-import { 
+import {
   CdcListenerModule,
-  DetectorModule, 
-  InferenceResultHandlerModule, 
-  MinioClientModule, 
-  UserModule
+  DetectorModule,
+  InferenceResultHandlerModule,
+  MinioClientModule,
+  UserModule,
 } from './modules';
 import { AdminModule } from './modules/admin/admin.module';
 import { RabbitMqModule } from './modules/worker-modules/rabbit-mq/rabbit-mq.module';
 
-
 @Module({
-  imports: [    
+  imports: [
     ConfigModule.forRoot({
       validationSchema: envObject,
       isGlobal: true,
     }),
     MongooseModule.forRootAsync({
-      imports: [ ConfigModule ],
+      imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         uri: configService.get<string>(ENV.MONGO_URI),
         verboseRetryLog: true,
       }),
-      inject: [ ConfigService ],
+      inject: [ConfigService],
     }),
     AmqpModule.forRootAsync({
       useFactory: async (configService: ConfigService) => ({
-          hostname: configService.get<string>(ENV.MQ_HOSTNAME),
-          port: configService.get<number>(ENV.MQ_PORT),
-          username: configService.get<string>(ENV.MQ_USER),
-          password: configService.get<string>(ENV.MQ_PWD),
+        hostname: configService.get<string>(ENV.MQ_HOSTNAME),
+        port: configService.get<number>(ENV.MQ_PORT),
+        username: configService.get<string>(ENV.MQ_USER),
+        password: configService.get<string>(ENV.MQ_PWD),
       }),
-      inject: [ ConfigService ],
+      inject: [ConfigService],
     }),
     MinioClientModule,
     DetectorModule,
@@ -48,8 +47,6 @@ import { RabbitMqModule } from './modules/worker-modules/rabbit-mq/rabbit-mq.mod
     InferenceResultHandlerModule,
     RabbitMqModule,
   ],
-  providers: [
-    AppService
-  ],
+  providers: [AppService],
 })
 export class AppModule {}

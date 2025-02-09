@@ -7,13 +7,8 @@ import { HistoryRepository } from './repository';
 import { History, HistorySchema } from './schemas';
 import { DetectorService } from './services';
 
-
 @Module({
-  imports: [
-    MongooseModule.forFeature([
-      { name: History.name, schema: HistorySchema }
-    ])
-  ],
+  imports: [MongooseModule.forFeature([{ name: History.name, schema: HistorySchema }])],
   controllers: [DetectorController],
   providers: [DetectorService, HistoryRepository, HistoryMapper],
 })

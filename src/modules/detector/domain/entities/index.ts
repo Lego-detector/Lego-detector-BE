@@ -1,1 +1,1 @@
-export * from './history.entity'
+export * from './history.entity';

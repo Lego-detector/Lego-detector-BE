@@ -12,7 +12,7 @@ export class BoundingBox {
   @Prop({ required: true, type: Number })
   conf: number;
 
-  @Prop({ required: true, type: [Number] })  // Array of numbers
+  @Prop({ required: true, type: [Number] }) // Array of numbers
   xywh: number[];
 }
 

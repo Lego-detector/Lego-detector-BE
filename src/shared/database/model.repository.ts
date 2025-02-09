@@ -58,7 +58,7 @@ export class ModelRepository<T extends Document, E extends BaseEntity<T>> {
       await doc.save({ session });
 
       return this.mapper.toEntity(doc);
-    }
+    };
 
     return this.sessionHandler<E>(callback.bind(this), session);
   }
@@ -67,107 +67,88 @@ export class ModelRepository<T extends Document, E extends BaseEntity<T>> {
     id: string,
     updateQuery: Partial<T>,
     options?: QueryOptions<T>,
-    session?: ClientSession
+    session?: ClientSession,
   ): Promise<E> {
     const callback = async () => {
       const updateOption: QueryOptions<T> = { new: true, session, ...options };
-      const updatedDoc = await this.model.findByIdAndUpdate(
-        id,
-        updateQuery,
-        updateOption,
-      )
-      .lean<T>()
-      .exec();
+      const updatedDoc = await this.model
+        .findByIdAndUpdate(id, updateQuery, updateOption)
+        .lean<T>()
+        .exec();
 
       return this.mapper.toEntity(updatedDoc);
-    }
+    };
 
-     return this.sessionHandler<E>(callback.bind(this), session);
+    return this.sessionHandler<E>(callback.bind(this), session);
   }
 
   async findOneAndUpdate(
     filterQuery: FilterQuery<T>,
     updateQuery: Partial<T>,
     options?: QueryOptions<T>,
-    session?: ClientSession
+    session?: ClientSession,
   ): Promise<E> {
     const callback = async () => {
       const updateOption: QueryOptions<T> = { new: true, session, ...options };
-      const updatedDoc = await this.model.findOneAndUpdate(
-        filterQuery,
-        updateQuery,
-        updateOption,
-      )
-      .lean<T>()
-      .exec();
+      const updatedDoc = await this.model
+        .findOneAndUpdate(filterQuery, updateQuery, updateOption)
+        .lean<T>()
+        .exec();
 
       return this.mapper.toEntity(updatedDoc);
-    }
+    };
 
-     return this.sessionHandler<E>(callback.bind(this), session);
+    return this.sessionHandler<E>(callback.bind(this), session);
   }
 
   async updateMany(
     filterQuery: FilterQuery<T>,
     updateQuery: UpdateQuery<T>,
     options?: QueryOptions<T>,
-    session?: ClientSession
+    session?: ClientSession,
   ): Promise<E[]> {
     const callback = async () => {
       const updateOption: QueryOptions<T> = { new: true, session, ...options };
-      const updatedDocs = await this.model.findOneAndUpdate(
-        filterQuery,
-        updateQuery,
-        updateOption,
-      )
-      .lean<T[]>()
-      .exec();
+      const updatedDocs = await this.model
+        .findOneAndUpdate(filterQuery, updateQuery, updateOption)
+        .lean<T[]>()
+        .exec();
 
       return updatedDocs.map(doc => this.mapper.toEntity(doc));
-    }
+    };
 
-     return this.sessionHandler<E[]>(callback.bind(this), session);
+    return this.sessionHandler<E[]>(callback.bind(this), session);
   }
 
   async findByIdAndDelete(id: string, session?: ClientSession): Promise<E> {
     const callback = async () => {
-      const deletedDoc = await this.model.findByIdAndDelete(
-        id, 
-        session
-      )
-      .lean<T>()
-      .exec();
+      const deletedDoc = await this.model.findByIdAndDelete(id, session).lean<T>().exec();
 
       return this.mapper.toEntity(deletedDoc);
-    }
+    };
 
-     return this.sessionHandler<E>(callback.bind(this), session);
+    return this.sessionHandler<E>(callback.bind(this), session);
   }
 
   async findOneAndDelete(
-    filterQuery: FilterQuery<T>, 
-    options?: QueryOptions<T>, 
-    session?: ClientSession
+    filterQuery: FilterQuery<T>,
+    options?: QueryOptions<T>,
+    session?: ClientSession,
   ): Promise<E> {
     const callback = async () => {
       const deleteOption: QueryOptions<T> = { new: true, session, ...options };
-      const deletedDoc = await this.model.findOneAndDelete(
-        filterQuery, 
-        deleteOption
-      )
-      .lean<T>()
-      .exec();
+      const deletedDoc = await this.model
+        .findOneAndDelete(filterQuery, deleteOption)
+        .lean<T>()
+        .exec();
 
       return this.mapper.toEntity(deletedDoc);
-    }
+    };
 
-     return this.sessionHandler<E>(callback.bind(this), session);
+    return this.sessionHandler<E>(callback.bind(this), session);
   }
 
-  private async sessionHandler<U>(
-    callback: () => Promise<U>,
-    session?: ClientSession
-  ) {
+  private async sessionHandler<U>(callback: () => Promise<U>, session?: ClientSession) {
     if (session) {
       try {
         return await callback();
