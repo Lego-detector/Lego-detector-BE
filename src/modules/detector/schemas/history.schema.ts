@@ -14,11 +14,11 @@ export type HistoryDocument = HydratedDocument<History>
     versionKey: false
 })
 export class History {
-    @Prop({ required: true })
+    @Prop({ required: false })
     imageUrl: string;
   
     @Prop({ type: [BoundingBoxSchema], default: [] })
-    boundingBoxes: BoundingBox[];
+    results: BoundingBox[];
 }
 
 

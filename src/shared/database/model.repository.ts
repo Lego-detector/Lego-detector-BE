@@ -11,7 +11,7 @@ import {
 import { BaseMapper } from '../base';
 import { BaseEntity } from '../base/base.entity';
 
-export class ModelRepository<T extends Document, E extends BaseEntity> {
+export class ModelRepository<T extends Document, E extends BaseEntity<T>> {
   constructor(
     protected readonly model: Model<T>,
     protected readonly mapper: BaseMapper<T, E>,
@@ -51,7 +51,7 @@ export class ModelRepository<T extends Document, E extends BaseEntity> {
     return this.mapper.toEntity(doc);
   }
 
-  async create(createEntityData: unknown, session: ClientSession): Promise<T> {
+  async save(createEntityData: unknown, session?: ClientSession): Promise<E> {
     const callback = async () => {
       const doc = new this.model(createEntityData);
 
@@ -60,7 +60,7 @@ export class ModelRepository<T extends Document, E extends BaseEntity> {
       return this.mapper.toEntity(doc);
     }
 
-    return this.sessionHandler<T>(callback.bind(this), session);
+    return this.sessionHandler<E>(callback.bind(this), session);
   }
 
   async findByIdAndUpdate(
@@ -68,7 +68,7 @@ export class ModelRepository<T extends Document, E extends BaseEntity> {
     updateQuery: Partial<T>,
     options?: QueryOptions<T>,
     session?: ClientSession
-  ): Promise<T> {
+  ): Promise<E> {
     const callback = async () => {
       const updateOption: QueryOptions<T> = { new: true, session, ...options };
       const updatedDoc = await this.model.findByIdAndUpdate(
@@ -82,7 +82,7 @@ export class ModelRepository<T extends Document, E extends BaseEntity> {
       return this.mapper.toEntity(updatedDoc);
     }
 
-     return this.sessionHandler<T>(callback.bind(this), session);
+     return this.sessionHandler<E>(callback.bind(this), session);
   }
 
   async findOneAndUpdate(
@@ -90,7 +90,7 @@ export class ModelRepository<T extends Document, E extends BaseEntity> {
     updateQuery: Partial<T>,
     options?: QueryOptions<T>,
     session?: ClientSession
-  ): Promise<T> {
+  ): Promise<E> {
     const callback = async () => {
       const updateOption: QueryOptions<T> = { new: true, session, ...options };
       const updatedDoc = await this.model.findOneAndUpdate(
@@ -104,7 +104,7 @@ export class ModelRepository<T extends Document, E extends BaseEntity> {
       return this.mapper.toEntity(updatedDoc);
     }
 
-     return this.sessionHandler<T>(callback.bind(this), session);
+     return this.sessionHandler<E>(callback.bind(this), session);
   }
 
   async updateMany(
@@ -112,7 +112,7 @@ export class ModelRepository<T extends Document, E extends BaseEntity> {
     updateQuery: UpdateQuery<T>,
     options?: QueryOptions<T>,
     session?: ClientSession
-  ): Promise<T[]> {
+  ): Promise<E[]> {
     const callback = async () => {
       const updateOption: QueryOptions<T> = { new: true, session, ...options };
       const updatedDocs = await this.model.findOneAndUpdate(
@@ -126,10 +126,10 @@ export class ModelRepository<T extends Document, E extends BaseEntity> {
       return updatedDocs.map(doc => this.mapper.toEntity(doc));
     }
 
-     return this.sessionHandler<T[]>(callback.bind(this), session);
+     return this.sessionHandler<E[]>(callback.bind(this), session);
   }
 
-  async findByIdAndDelete(id: string, session?: ClientSession): Promise<T> {
+  async findByIdAndDelete(id: string, session?: ClientSession): Promise<E> {
     const callback = async () => {
       const deletedDoc = await this.model.findByIdAndDelete(
         id, 
@@ -141,14 +141,14 @@ export class ModelRepository<T extends Document, E extends BaseEntity> {
       return this.mapper.toEntity(deletedDoc);
     }
 
-     return this.sessionHandler<T>(callback.bind(this), session);
+     return this.sessionHandler<E>(callback.bind(this), session);
   }
 
   async findOneAndDelete(
     filterQuery: FilterQuery<T>, 
     options?: QueryOptions<T>, 
     session?: ClientSession
-  ): Promise<T> {
+  ): Promise<E> {
     const callback = async () => {
       const deleteOption: QueryOptions<T> = { new: true, session, ...options };
       const deletedDoc = await this.model.findOneAndDelete(
@@ -161,7 +161,7 @@ export class ModelRepository<T extends Document, E extends BaseEntity> {
       return this.mapper.toEntity(deletedDoc);
     }
 
-     return this.sessionHandler<T>(callback.bind(this), session);
+     return this.sessionHandler<E>(callback.bind(this), session);
   }
 
   private async sessionHandler<U>(

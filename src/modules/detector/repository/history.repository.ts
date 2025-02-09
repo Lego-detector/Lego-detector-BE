@@ -6,7 +6,7 @@ import { ModelRepository } from 'src/shared/database/model.repository';
 
 import { HistoryEntity } from '../domain/entities';
 import { HistoryMapper } from '../domain/mapper';
-import { HistoryDocument } from '../schemas';
+import { History, HistoryDocument } from '../schemas';
 
 export class HistoryRepository extends ModelRepository<HistoryDocument, HistoryEntity> {
     constructor (
