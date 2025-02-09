@@ -9,12 +9,10 @@ import { ENV, envObject } from './config';
 import { 
   CdcListenerModule,
   DetectorModule, 
-  InferenceResultHandlerModule, 
-  MinioClientModule, 
+  InfernceResultHandlerModule, 
   UserModule
 } from './modules';
 import { AdminModule } from './modules/admin/admin.module';
-import { RabbitMqModule } from './modules/worker-modules/rabbit-mq/rabbit-mq.module';
 
 
 @Module({
@@ -40,13 +38,11 @@ import { RabbitMqModule } from './modules/worker-modules/rabbit-mq/rabbit-mq.mod
       }),
       inject: [ ConfigService ],
     }),
-    MinioClientModule,
     DetectorModule,
     UserModule,
     AdminModule,
     CdcListenerModule,
-    InferenceResultHandlerModule,
-    RabbitMqModule,
+    InfernceResultHandlerModule,
   ],
   providers: [
     AppService

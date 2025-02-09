@@ -31,7 +31,6 @@
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-sonarjs": "^3.0.1",
     "joi": "^17.13.3",
-    "minio": "^8.0.4",
     "mongoose": "^8.10.0",
     "nestjs-amqp": "^0.2.2",
     "pg": "^8.13.1",

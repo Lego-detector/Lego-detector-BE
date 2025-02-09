@@ -1,4 +1,4 @@
-export * from './minio-client/minio-client.module'
+export * from './external/external.module'
 
 export * from './user/user.module'
 
