@@ -15,7 +15,7 @@ export class HistoryMapper extends BaseMapper<HistoryDocument, HistoryEntity> {
   toDocument(history: HistoryEntity): Partial<HistoryDocument> {
     return {
       _id: history._id,
-      imageUrl: '',
+      imageUrl: history.imageUrl,
       results: history.results,
     };
   }

@@ -1,4 +1,7 @@
-import { Controller, Post } from '@nestjs/common';
+import { Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+
+import { FileValidationPipe } from 'src/common';
 
 import { HistoryDocument } from '../schemas';
 import { DetectorService } from '../services';
@@ -8,7 +11,11 @@ export class DetectorController {
   constructor(private readonly detectorService: DetectorService) {}
 
   @Post('predict')
-  async createInferenceSession(): Promise<HistoryDocument> {
-    return this.detectorService.createSession();
+  @UseInterceptors(FileInterceptor('image'))
+  async createInferenceSession(
+    @UploadedFile(new FileValidationPipe())
+    image: Express.Multer.File,
+  ): Promise<HistoryDocument> {
+    return this.detectorService.createSession(image);
   }
 }

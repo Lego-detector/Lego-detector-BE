@@ -1,22 +1,23 @@
 import { Injectable } from '@nestjs/common';
 
-import { Types } from 'mongoose';
+import { MinioClientService } from 'src/modules/minio-client';
 
-import { HistoryEntity } from '../domain/entities';
 import { HistoryRepository } from '../repository';
 import { HistoryDocument } from '../schemas';
 
 @Injectable()
 export class DetectorService {
-  constructor(private readonly historyRepository: HistoryRepository) {}
+  constructor(
+    private readonly historyRepository: HistoryRepository,
+    private readonly minioClientService: MinioClientService,
+  ) {}
 
-  async createSession(): Promise<HistoryDocument> {
-    const history = new HistoryEntity({
-      _id: new Types.ObjectId(),
-    }).toDocument();
+  async createSession(image: Express.Multer.File): Promise<HistoryDocument> {
+    const imageUrl = await this.minioClientService.upload('temp', image);
+    const history = await this.historyRepository.save({
+      imageUrl,
+    });
 
-    await this.historyRepository.save(history);
-
-    return history as HistoryDocument;
+    return history.toDocument() as HistoryDocument;
   }
 }
