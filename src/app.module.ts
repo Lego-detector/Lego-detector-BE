@@ -2,19 +2,17 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import { AmqpModule } from 'nestjs-amqp';
-
 import { AppService } from './app.service';
 import { ENV, envObject } from './config';
 import {
   DetectorModule,
-  InferenceResultHandlerModule,
+  InferenceEventConsumerModule,
   MSGRelayModule,
   MinioClientModule,
+  RabbitMqModule,
   UserModule,
 } from './modules';
 import { AdminModule } from './modules/admin/admin.module';
-import { RabbitMqModule } from './modules/worker-modules/rabbit-mq/rabbit-mq.module';
 
 @Module({
   imports: [
@@ -30,21 +28,12 @@ import { RabbitMqModule } from './modules/worker-modules/rabbit-mq/rabbit-mq.mod
       }),
       inject: [ConfigService],
     }),
-    AmqpModule.forRootAsync({
-      useFactory: async (configService: ConfigService) => ({
-        hostname: configService.get<string>(ENV.MQ_HOSTNAME),
-        port: configService.get<number>(ENV.MQ_PORT),
-        username: configService.get<string>(ENV.MQ_USER),
-        password: configService.get<string>(ENV.MQ_PWD),
-      }),
-      inject: [ConfigService],
-    }),
     MinioClientModule,
     DetectorModule,
     UserModule,
     AdminModule,
     MSGRelayModule,
-    InferenceResultHandlerModule,
+    InferenceEventConsumerModule,
     RabbitMqModule,
   ],
   providers: [AppService],

@@ -1,9 +1,12 @@
-import { Injectable, Logger } from '@nestjs/common';
+import * as path from 'path';
+
+import { Injectable, Logger, ServiceUnavailableException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import * as Minio from 'minio';
 
 import { ENV } from 'src/config';
+import { generateMd5Hash } from 'src/shared';
 
 @Injectable()
 export class MinioClientService {
@@ -21,5 +24,57 @@ export class MinioClientService {
     };
 
     this.minioClient = new Minio.Client(minioOption);
+  }
+
+  async upload(
+    directoryName: string,
+    file: Express.Multer.File,
+    supportedMimeTypes: RegExp = /(jpg|jpeg|png)/,
+    suffixFileName: string = '',
+  ): Promise<string> {
+    // if (!file || !file.buffer || !file.originalname) {
+    //   throw new ErrorException(CODES.TEC_042);
+    // }
+
+    if (!supportedMimeTypes.test(file.mimetype)) {
+      // throw new ErrorException(CODES.TEC_019);
+    }
+
+    const timestamp = Date.now().toString();
+    const randomNumber = Math.random();
+    const hashedFileName = generateMd5Hash(`${randomNumber}${timestamp}${file.originalname}`);
+    const ext = path.extname(file.originalname);
+    const filename = `${directoryName}/${hashedFileName}${suffixFileName}${ext}`;
+
+    await this.uploadFile(filename, file.buffer, file.size);
+
+    return filename;
+  }
+
+  async getFileAsBuffer(objectName: string): Promise<Buffer> {
+    try {
+      const stream = await this.minioClient.getObject(this.bucketName, objectName);
+      const chunks: Buffer[] = [];
+
+      for await (const chunk of stream) {
+        chunks.push(chunk);
+      }
+
+      return Buffer.concat(chunks);
+    } catch (error) {
+      console.error('Error getting file as Buffer:', error);
+
+      throw error;
+    }
+  }
+
+  private async uploadFile(filename: string, buffer: Buffer, size: number): Promise<void> {
+    try {
+      await this.minioClient.putObject(this.bucketName, filename, buffer, size);
+    } catch (error) {
+      this.logger.error(error);
+
+      throw new ServiceUnavailableException('Failed to upload file');
+    }
   }
 }

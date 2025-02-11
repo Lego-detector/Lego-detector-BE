@@ -4,6 +4,7 @@ import { BoundingBoxDocument, HistoryDocument } from '../../schemas';
 import { HistoryMapper } from '../mapper';
 
 export class HistoryEntity extends BaseEntity<HistoryDocument> {
+  imageUrl: string;
   results: BoundingBoxDocument[] = [];
 
   constructor(history: Partial<HistoryDocument>) {
