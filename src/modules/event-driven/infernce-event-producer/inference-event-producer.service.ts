@@ -1,7 +1,4 @@
-import { ChildProcess } from 'child_process';
-
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 
 import * as amqp from 'amqplib';
 
@@ -12,12 +9,8 @@ import { RabbitMqService } from '../rabbit-mq/rabbit-mq.service';
 @Injectable()
 export class InferenceEventProducerService implements OnModuleInit {
   private channel: amqp.Channel;
-  private worker: ChildProcess;
 
-  constructor(
-    private readonly rabbitMqService: RabbitMqService,
-    private readonly configServiec: ConfigService,
-  ) {}
+  constructor(private readonly rabbitMqService: RabbitMqService) {}
 
   async onModuleInit() {
     this.channel = this.rabbitMqService.getChannel();

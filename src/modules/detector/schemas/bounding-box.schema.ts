@@ -4,10 +4,12 @@ import { HydratedDocument } from 'mongoose';
 
 export type BoundingBoxDocument = HydratedDocument<BoundingBox>;
 
-@Schema()
+@Schema({
+  _id: false,
+})
 export class BoundingBox {
   @Prop({ required: true, type: Number })
-  class_name: number;
+  className: number;
 
   @Prop({ required: true, type: Number })
   conf: number;

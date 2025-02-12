@@ -7,6 +7,7 @@ export class HistoryMapper extends BaseMapper<HistoryDocument, HistoryEntity> {
   toEntity(historyDoc: HistoryDocument): HistoryEntity {
     return new HistoryEntity({
       _id: historyDoc._id,
+      status: historyDoc.status,
       imageUrl: historyDoc.imageUrl,
       results: historyDoc.results,
     });
@@ -15,6 +16,7 @@ export class HistoryMapper extends BaseMapper<HistoryDocument, HistoryEntity> {
   toDocument(history: HistoryEntity): Partial<HistoryDocument> {
     return {
       _id: history._id,
+      status: history.status,
       imageUrl: history.imageUrl,
       results: history.results,
     };
