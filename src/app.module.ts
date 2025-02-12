@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { AppService } from './app.service';
@@ -28,6 +29,7 @@ import { AdminModule } from './modules/admin/admin.module';
       }),
       inject: [ConfigService],
     }),
+    EventEmitterModule.forRoot(),
     MinioClientModule,
     DetectorModule,
     UserModule,

@@ -16,5 +16,6 @@ import { DetectorService } from './services';
   ],
   controllers: [DetectorController],
   providers: [DetectorService, HistoryRepository, HistoryMapper],
+  exports: [HistoryRepository],
 })
 export class DetectorModule {}
