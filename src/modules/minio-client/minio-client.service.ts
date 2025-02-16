@@ -31,6 +31,7 @@ export class MinioClientService {
     file: Express.Multer.File,
     supportedMimeTypes: RegExp = /(jpg|jpeg|png)/,
     suffixFileName: string = '',
+    fixedFileName?: string,
   ): Promise<string> {
     // if (!file || !file.buffer || !file.originalname) {
     //   throw new ErrorException(CODES.TEC_042);
@@ -39,16 +40,23 @@ export class MinioClientService {
     if (!supportedMimeTypes.test(file.mimetype)) {
       // throw new ErrorException(CODES.TEC_019);
     }
+    
+    const ext = path.extname(file.originalname);
+    const fileName = fixedFileName ? fixedFileName : this.generateFileName(file);
+    const objectName = `${directoryName}/${fileName}${suffixFileName}${ext}`;
 
+    await this.uploadFile(objectName, file.buffer, file.size);
+
+    return objectName;
+  }
+
+  generateFileName(
+    file: Express.Multer.File,
+  ): string {
     const timestamp = Date.now().toString();
     const randomNumber = Math.random();
-    const hashedFileName = generateMd5Hash(`${randomNumber}${timestamp}${file.originalname}`);
-    const ext = path.extname(file.originalname);
-    const filename = `${directoryName}/${hashedFileName}${suffixFileName}${ext}`;
 
-    await this.uploadFile(filename, file.buffer, file.size);
-
-    return filename;
+    return generateMd5Hash(`${randomNumber}${timestamp}${file.originalname}`);
   }
 
   async getFileAsBuffer(objectName: string): Promise<Buffer> {

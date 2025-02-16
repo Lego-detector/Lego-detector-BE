@@ -14,6 +14,7 @@ import {
   UserModule,
 } from './modules';
 import { AdminModule } from './modules/admin/admin.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { AdminModule } from './modules/admin/admin.module';
     MSGRelayModule,
     InferenceEventConsumerModule,
     RabbitMqModule,
+    AuthModule,
   ],
   providers: [AppService],
 })

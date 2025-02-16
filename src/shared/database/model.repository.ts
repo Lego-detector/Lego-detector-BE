@@ -51,9 +51,9 @@ export class ModelRepository<T extends Document, E extends BaseEntity<T>> {
     return this.mapper.toEntity(doc);
   }
 
-  async save(createEntityData: unknown, session?: ClientSession): Promise<E> {
+  async save(entityData: unknown, session?: ClientSession): Promise<E> {
     const callback = async () => {
-      const doc = new this.model(createEntityData);
+      const doc = new this.model(entityData);
 
       await doc.save({ session });
 
@@ -65,7 +65,7 @@ export class ModelRepository<T extends Document, E extends BaseEntity<T>> {
 
   async findByIdAndUpdate(
     id: string,
-    updateQuery: Partial<T>,
+    updateQuery: UpdateQuery<T>,
     options?: QueryOptions<T>,
     session?: ClientSession,
   ): Promise<E> {
@@ -84,7 +84,7 @@ export class ModelRepository<T extends Document, E extends BaseEntity<T>> {
 
   async findOneAndUpdate(
     filterQuery: FilterQuery<T>,
-    updateQuery: Partial<T>,
+    updateQuery: UpdateQuery<T>,
     options?: QueryOptions<T>,
     session?: ClientSession,
   ): Promise<E> {
