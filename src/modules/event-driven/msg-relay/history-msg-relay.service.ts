@@ -17,7 +17,17 @@ export class HistoryMSGRelayService implements OnModuleInit {
 
   async onModuleInit() {
     const collection = this.connection.db.collection(COLLECTION_NAME.HISTORIES);
-    const changeStream = collection.watch();
+    // const watchListMongoEvent = [ EVENT.MONGO.INSERT ];
+    const changeStream = collection.watch(
+      [
+        // {
+        //   $match: {
+        //     // 'txnNumber': { $exists: true },
+        //   },
+        // },
+      ],
+      { fullDocument: 'whenAvailable' }
+    );
 
     changeStream.on('change', async change => {
       await this.eventHandler(change);

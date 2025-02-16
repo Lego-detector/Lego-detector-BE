@@ -3,7 +3,7 @@ import { OnEvent } from '@nestjs/event-emitter';
 
 import * as amqp from 'amqplib';
 
-import { HistoryRepository } from 'src/modules/detector/repository';
+import { HistoryRepository } from 'src/modules/detector/repositories';
 import { EVENT, IInferenceResponseEvent } from 'src/shared';
 
 import { InferenceEventConsumerService } from './inference-event-consumer.service';

@@ -5,7 +5,7 @@ import { Model } from 'mongoose';
 import { ModelRepository } from 'src/shared/database/model.repository';
 
 import { HistoryEntity } from '../domain/entities';
-import { HistoryMapper } from '../domain/mapper';
+import { HistoryMapper } from '../domain/mappers';
 import { History, HistoryDocument } from '../schemas';
 
 export class HistoryRepository extends ModelRepository<HistoryDocument, HistoryEntity> {

@@ -25,6 +25,12 @@ export class User {
   lname: string;
 
   @Prop({ required: true })
+  email: string;
+
+  @Prop({ required: false })
+  password?: string;
+
+  @Prop({ required: true })
   profileUrl: string;
 
   @Prop({
