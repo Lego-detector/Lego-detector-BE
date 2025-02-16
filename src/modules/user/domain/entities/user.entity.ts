@@ -9,7 +9,7 @@ export class UserEntity extends BaseEntity<UserDocument> {
   lname: string;
   email: string;
   password: string;
-  profileUrl: string;
+  profileImageUrl: string;
   role: UserRole;
   refreshToken: string;
   private userDocument: UserDocument;

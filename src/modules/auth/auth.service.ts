@@ -2,16 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
-import { ErrorException } from 'src/common';
-import { CODES } from 'src/shared';
-
+import { ErrorException } from '../../common';
 import { ENV } from '../../config';
+import { CODES } from '../../shared/constant';
 import { IAuthResponse, ICredentials, ITokenPayload } from '../../shared/interfaces';
 import { UserEntity } from '../user/domain/entities';
-import { CreateUserDto } from '../user/dto/create-user.dto';
 import { UserService } from '../user/services';
 
-import { LocalSigninDto } from './dto';
+import { LocalSignInDto, LocalSignUpDto } from './dto';
 
 
 @Injectable()
@@ -22,7 +20,7 @@ export class AuthService {
         private readonly userService: UserService
     ) {}
 
-    async signIn(localSigninDto: LocalSigninDto): Promise<IAuthResponse> {
+    async signIn(localSigninDto: LocalSignInDto): Promise<IAuthResponse> {
       const { email, password } = localSigninDto;
       const user = await this.userService.findOneByEmail(email);
       /*
@@ -39,8 +37,17 @@ export class AuthService {
       return this.createSignInResponse(user);
     }
 
-    async signUp(createUserDto: CreateUserDto): Promise<IAuthResponse> {
-      const newUser = await this.userService.create(createUserDto);
+    async signUp(
+      localSignUpDto: LocalSignUpDto, 
+      profileImage: Express.Multer.File
+    ): Promise<IAuthResponse> {
+      const existsUser = await this.userService.findOneByEmail(localSignUpDto.email);
+
+      if (existsUser) {
+        throw new ErrorException(CODES.USER_EMAIL_CONFLICT);
+      }
+
+      const newUser = await this.userService.create(localSignUpDto, profileImage);
 
       return this.createSignInResponse(newUser);
     }

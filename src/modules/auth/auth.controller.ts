@@ -3,10 +3,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 
 import { FileValidationPipe } from '../../common';
 import { IAuthResponse } from '../../shared/interfaces';
-import { CreateUserDto } from '../user/dto/';
 
 import { AuthService } from './auth.service';
-import { LocalSigninDto } from './dto';
+import { LocalSignInDto, LocalSignUpDto } from './dto';
 
 @Controller('auth')
 export class AuthController {
@@ -14,7 +13,7 @@ export class AuthController {
 
   @Post('sign-in')
   async signIn(
-    @Body() localSignInDto: LocalSigninDto
+    @Body() localSignInDto: LocalSignInDto
   ): Promise<IAuthResponse> {
     return this.authService.signIn(localSignInDto);
   }
@@ -24,8 +23,8 @@ export class AuthController {
   async signUp(
     @UploadedFile(new FileValidationPipe(undefined, undefined, false))
     profileImage: Express.Multer.File,
-    @Body() createUserDto: CreateUserDto,
+    @Body() localSignUpDto: LocalSignUpDto,
   ): Promise<IAuthResponse> {
-    return this.authService.signUp(createUserDto);
+    return this.authService.signUp(localSignUpDto, profileImage);
   }
 }
