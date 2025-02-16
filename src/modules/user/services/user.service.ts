@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { ErrorException } from 'src/common';
 import { CODES } from 'src/shared';
 
+import { MinioClientService } from '../../minio-client';
 import { UserEntity } from '../domain/entities';
 import { CreateUserDto } from '../dto';
 import { UserRepository } from '../repositories';
@@ -10,6 +11,7 @@ import { UserRepository } from '../repositories';
 @Injectable()
 export class UserService {
   constructor (
+    private readonly minioClientService: MinioClientService,
     private readonly userRepository: UserRepository
   ) {}
 
@@ -32,17 +34,27 @@ export class UserService {
     );
   }
 
-  async create(createUserDto: CreateUserDto): Promise<UserEntity> {
+  async create(
+    createUserDto: CreateUserDto, 
+    profileImage?: Express.Multer.File
+  ): Promise<UserEntity> {
+    if (profileImage) {
+      createUserDto.profileImageUrl = this.minioClientService.generateFileName(profileImage);
+    }
+    
     const newUser = new UserEntity({
-      fname: createUserDto.fname,
-      lname: createUserDto.lname,
-      email: createUserDto.email,
-      profileUrl: 'temp',
-      password: createUserDto.password,
+      ...createUserDto,
+      profileImageUrl: 'temp'
     });
 
-    await newUser.hashPassword();
+    if (createUserDto.password) {
+      newUser.password = createUserDto.password
+      await newUser.hashPassword();
+    }
 
+    //TODO: Create sessions to save new user then upload file to minio
+    //If upload failed. Sessions will abort 
+    
     return this.userRepository.save(newUser.toDocument());
   }
 

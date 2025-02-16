@@ -38,6 +38,10 @@ export class ModelRepository<T extends Document, E extends BaseEntity<T>> {
   ): Promise<E> {
     const doc = await this.model.findById(id, projection, options).lean<T>().exec();
 
+    if (!doc) {
+      return null;
+    }
+
     return this.mapper.toEntity(doc);
   }
 
@@ -47,6 +51,10 @@ export class ModelRepository<T extends Document, E extends BaseEntity<T>> {
     options?: QueryOptions<T>,
   ): Promise<E> {
     const doc = await this.model.findOne(filterQuery, projection, options).lean<T>().exec();
+
+    if (!doc) {
+      return null;
+    }
 
     return this.mapper.toEntity(doc);
   }
@@ -124,6 +132,10 @@ export class ModelRepository<T extends Document, E extends BaseEntity<T>> {
     const callback = async () => {
       const deletedDoc = await this.model.findByIdAndDelete(id, session).lean<T>().exec();
 
+      if (!deletedDoc) {
+        return null;
+      }
+
       return this.mapper.toEntity(deletedDoc);
     };
 
@@ -141,6 +153,10 @@ export class ModelRepository<T extends Document, E extends BaseEntity<T>> {
         .findOneAndDelete(filterQuery, deleteOption)
         .lean<T>()
         .exec();
+
+        if (!deletedDoc) {
+          return null;
+        }
 
       return this.mapper.toEntity(deletedDoc);
     };

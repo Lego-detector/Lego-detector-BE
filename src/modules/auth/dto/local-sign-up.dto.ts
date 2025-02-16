@@ -1,6 +1,7 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
-export class CreateUserDto {
+
+export class LocalSignUpDto  {
     @IsString()
     @IsNotEmpty()
     fname: string;
@@ -9,15 +10,11 @@ export class CreateUserDto {
     @IsNotEmpty()
     lname: string;
 
-    @IsString()
-    @IsOptional()
-    profileImageUrl?: string
-
     @IsNotEmpty()
     @IsEmail()
     email: string;
 
-    @IsOptional()
+    @IsNotEmpty()
     @IsString()
     password: string;
 }

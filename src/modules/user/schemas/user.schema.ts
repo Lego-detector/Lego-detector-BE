@@ -31,7 +31,7 @@ export class User {
   password?: string;
 
   @Prop({ required: true })
-  profileUrl: string;
+  profileImageUrl: string;
 
   @Prop({
     required: true,

@@ -15,7 +15,7 @@ export class UserMapper extends BaseMapper<UserDocument, UserEntity> {
       fname: user.fname,
       lname: user.lname,
       role: user.role,
-      profileUrl: user.profileUrl,
+      profileImageUrl: user.profileImageUrl,
       email: user.email,
       password: user.password,
       refreshToken: user.refreshToken,

@@ -15,7 +15,7 @@ export class InternalExceptionFilter implements ExceptionFilter {
   catch(exception: Error, host: ArgumentsHost) {
     const context = host.switchToHttp();
     const response = context.getResponse<Response>();
-    const { statusCode, ...detail } = mapResponse(CODES.INTERNAL, undefined, exception.message);
+    const { statusCode, ...detail } = mapResponse(CODES.INTERNAL_SERVER_ERROR, undefined, exception.message);
 
     this.logger.fatal(`${exception?.stack}`);
 
