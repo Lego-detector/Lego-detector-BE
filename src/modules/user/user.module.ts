@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
+import { DetectorModule } from '../detector/detector.module';
 import { MinioClientModule } from '../minio-client';
 
 import { UserController } from './controllers';
@@ -12,7 +13,8 @@ import { UserService } from './services';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
-    MinioClientModule
+    MinioClientModule,
+    DetectorModule
   ],
   controllers: [UserController],
   providers: [UserService, UserRepository, UserMapper],

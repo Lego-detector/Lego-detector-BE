@@ -3,16 +3,17 @@ import { OnEvent } from '@nestjs/event-emitter';
 
 import * as amqp from 'amqplib';
 
-import { HistoryRepository } from 'src/modules/detector/repositories';
-import { EVENT, IInferenceResponseEvent } from 'src/shared';
+import { EVENT, IInferenceResponseEvent } from '../../../shared';
+import { DetectorService } from '../../detector/services';
 
 import { InferenceEventConsumerService } from './inference-event-consumer.service';
+
 
 @Injectable()
 export class InferenceEventConsumerListener {
   constructor(
     private readonly inferenceEventConsumerService: InferenceEventConsumerService,
-    private readonly historyRepository: HistoryRepository,
+    private readonly detectorService: DetectorService,
   ) {}
 
   @OnEvent(EVENT.INFERENCE_SESSION.DONE, { async: true })
@@ -21,10 +22,10 @@ export class InferenceEventConsumerListener {
     const inferenceResults = JSON.parse(content) as IInferenceResponseEvent;
 
     // REMIND: Temp code without transactioning mechanism
-    await this.historyRepository.findByIdAndUpdate(inferenceResults.uid, {
-      status: inferenceResults.status,
-      results: inferenceResults.results,
-    });
+    await this.detectorService.markSessionAsCompleted(
+      inferenceResults.uid, 
+      inferenceResults.results,
+    );
 
     await this.inferenceEventConsumerService.ack(msg);
   }

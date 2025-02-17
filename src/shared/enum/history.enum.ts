@@ -1,4 +1,4 @@
 export enum HistoryStatus {
-  PENDING = 'PENDING',
-  COMPELETED = 'COMPELETED',
+  Pending = 'PENDING',
+  Completed = 'COMPLETED',
 }

@@ -8,6 +8,11 @@ export const CODES: ICodeObj = {
     display: 'ทำรายการสำเร็จ',
     statusCode: HttpStatus.OK,
   },
+  BAD_REQUEST: {
+    message: 'Bad request.',
+    display: 'ข้อมูลที่ส่งมาไม่ถูกต้อง',
+    statusCode: HttpStatus.BAD_REQUEST,
+  },
   NOT_FOUND: {
     message: 'Not found.',
     display: 'ไม่พบ endpoint ดังกล่าว',
@@ -28,6 +33,11 @@ export const CODES: ICodeObj = {
     display: 'มีปัญหาเกิดขึ้นภายในระบบ โปรดติดต่อเจ้าหน้าที่',
     statusCode: HttpStatus.SERVICE_UNAVAILABLE,
   },
+  SIGNIN_FAILED: {
+    message: 'Email or password wrong',
+    display: 'กรอกอีเมลหรือรหัสผ่านผิด',
+    statusCode: HttpStatus.UNAUTHORIZED,
+  },
   USER_NOT_FOUND: {
     message: 'User not found.',
     display: 'ไม่พบข้อมูลบัญชีผู้ใช้',
@@ -42,5 +52,20 @@ export const CODES: ICodeObj = {
     message: 'MQ service error.',
     display: 'มีปัญหากับการติดต่อ MQ',
     statusCode: HttpStatus.SERVICE_UNAVAILABLE,
+  },
+  SESSIONS_NOT_YET_COMPLETED: {
+    message: 'Sessions not yet completed.',
+    display: 'เซสชั่นยังไม่เสร็จสมบูรณ์',
+    statusCode: HttpStatus.ACCEPTED,
+  },
+  SESSIONS_NOT_BELONG_TO_USER: {
+    message: 'Sessions not belong to current user.',
+    display: 'ผู้ใช้ปัจจุบันไม่ได้เป็นเจ้าของหมายเลขเซสชั่นนี้',
+    statusCode: HttpStatus.BAD_REQUEST,
+  },
+  HISTORY_NOT_FOUND: {
+    message: 'History not found.',
+    display: 'ไม่พบข้อมูลประวัติการตรวจจับ',
+    statusCode: HttpStatus.NOT_FOUND,
   },
 };
