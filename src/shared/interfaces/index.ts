@@ -6,4 +6,6 @@ export * from './code.interface';
 
 export * from './oauth';
 
-export * from './token.interface'
+export * from './token.interface';
+
+export * from './role-policy.interface';

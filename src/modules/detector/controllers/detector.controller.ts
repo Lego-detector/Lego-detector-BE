@@ -5,6 +5,7 @@ import { Types } from 'mongoose';
 
 import { FileValidationPipe, JwtAccessGuard } from 'src/common';
 import { CurrentUser } from 'src/common/decorators';
+import { UserEntity } from 'src/modules/user/domain/entities';
 
 import { GetCompletedSessionDto } from '../dto';
 import { HistoryDocument } from '../schemas';
@@ -32,10 +33,11 @@ export class DetectorController {
   async createSession(
     @UploadedFile(new FileValidationPipe())
     image: Express.Multer.File,
-    @CurrentUser('_id') userId: Types.ObjectId,
+    @CurrentUser() user: UserEntity,
   ): Promise<HistoryDocument> {
     return this.detectorService.createSession(
-      userId.toString(), 
+      user._id.toString(), 
+      user.role,
       image
     );
   }

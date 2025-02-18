@@ -21,7 +21,7 @@ export class InferenceEventConsumerListener {
     const content = msg.content.toString();
     const inferenceResults = JSON.parse(content) as IInferenceResponseEvent;
 
-    // REMIND: Temp code without transactioning mechanism
+    // TODO: Temp code without transactioning mechanism
     await this.detectorService.markSessionAsCompleted(
       inferenceResults.uid, 
       inferenceResults.results,

@@ -6,11 +6,9 @@ import { ErrorException } from 'src/common';
 import { ENV } from 'src/config';
 import { UserEntity } from 'src/modules/user/domain/entities';
 import { UserService } from 'src/modules/user/services';
-import { CODES, IAuthResponse, ICredentials, ITokenPayload } from 'src/shared';
+import { CODES, IAuthResponse, ICredentials, ITokenPayload, generateArgon2Hash } from 'src/shared';
 
 import { LocalSignInDto, LocalSignUpDto } from '../dto';
-
-
 
 
 @Injectable()
@@ -27,7 +25,7 @@ export class AuthService {
 
       if (!user) {
         //REMIND: Dummy user for creating time safe signIn mechanism
-        await new UserEntity({ password: '' }).hashPassword();
+        await generateArgon2Hash('');
         ///////////////////////////////////////////////////////////////
 
         throw new ErrorException(CODES.SIGNIN_FAILED);

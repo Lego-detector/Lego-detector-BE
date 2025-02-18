@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { Types } from 'mongoose';
 
 import { ErrorException } from '../../../common';
-import { CODES, HistoryStatus, UserRole } from '../../../shared';
+import { CODES, HistoryStatus, ROLE_POLICY, UserRole } from '../../../shared';
 import { MinioClientService } from '../../minio-client';
 import { HistoryEntity } from '../domain/entities';
 import { HistoryRepository } from '../repositories';
@@ -17,11 +17,23 @@ export class HistoryService {
         private readonly historyRepository: HistoryRepository,
     ) {}
 
-    async getUserCurrentHistory(userId: string, _role: UserRole): Promise<HistoryEntity[]> {
-        //TODO: add limit for each rank
-        // get limit number from user role
+    async isSessionQuotaRemain(userId: string, role: UserRole): Promise<boolean> {
+        const policy = ROLE_POLICY.get(role);
+        const quota = policy.SESSION_LIMIT;
+        const usedQuota = (await this.historyRepository.getTodayHistory(userId, quota)).length;
 
-        return this.historyRepository.getUserCurrentHistory(userId, undefined);
+        if (quota - usedQuota <= 0) {
+            return false
+        }
+
+        return true
+    }
+
+    async getUserCurrentHistory(userId: string, role: UserRole): Promise<HistoryEntity[]> {
+        const policy = ROLE_POLICY.get(role);
+        const limitation = policy.HISTORY_LIMIT;
+
+        return this.historyRepository.getUserCurrentHistory(userId, limitation);
     }
 
     async findById(historyId: string): Promise<HistoryEntity> {

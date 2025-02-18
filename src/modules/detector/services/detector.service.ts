@@ -4,7 +4,7 @@ import { InjectConnection } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
 
 import { ErrorException } from '../../../common';
-import { CODES } from '../../../shared';
+import { CODES, UserRole } from '../../../shared';
 import { BoundingBoxDocument, HistoryDocument } from '../schemas';
 
 import { HistoryService } from './history.service';
@@ -37,10 +37,19 @@ export class DetectorService {
 
   async createSession(
     userId: string,
+    role: UserRole,
     image: Express.Multer.File, 
   ): Promise<HistoryDocument> {
-    // check amount of user history before create history
-    const history = await await this.historyService.create(
+    const hasQuota = await this.historyService.isSessionQuotaRemain(
+      userId,
+      role
+    ) 
+
+    if (!hasQuota) {
+      throw new ErrorException(CODES.OUT_OF_SESSION_QUOTA);
+    }
+
+    const history = await this.historyService.create(
       userId,
       image
     );
