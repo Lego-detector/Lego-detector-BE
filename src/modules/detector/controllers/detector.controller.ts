@@ -42,6 +42,10 @@ export class DetectorController {
     image: Express.Multer.File,
     @CurrentUser() user: UserEntity,
   ): Promise<HistoryDocument> {
-    return this.detectorService.createSession(user._id.toString(), user.role, image);
+    return this.detectorService.createSession(
+      user._id.toString(), 
+      user.role,
+      image
+    );
   }
 }

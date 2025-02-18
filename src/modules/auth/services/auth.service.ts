@@ -18,23 +18,20 @@ export class AuthService {
     private readonly userService: UserService,
   ) {}
 
-  async signIn(localSigninDto: LocalSignInDto): Promise<IAuthResponse> {
-    const { email, password } = localSigninDto;
-    const user = await this.userService.findOneByEmail(email);
-
-    if (!user) {
-      //REMIND: Dummy user for creating time safe signIn mechanism
-      await generateArgon2Hash('');
-      ///////////////////////////////////////////////////////////////
-
-      throw new ErrorException(CODES.SIGNIN_FAILED);
-    }
+@Injectable()
+export class AuthService {
+    constructor (
+        private readonly configService: ConfigService,
+        private readonly jwtService: JwtService,
+        private readonly userService: UserService
+    ) {}
 
     const isMatch = await user.verifyPassword(password);
 
-    if (!isMatch) {
-      throw new ErrorException(CODES.SIGNIN_FAILED);
-    }
+      if (!user) {
+        //REMIND: Dummy user for creating time safe signIn mechanism
+        await generateArgon2Hash('');
+        ///////////////////////////////////////////////////////////////
 
     return this.createSignInResponse(user);
   }
