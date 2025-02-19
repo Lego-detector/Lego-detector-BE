@@ -10,7 +10,6 @@ import { HistoryEntity } from '../domain/entities';
 import { HistoryMapper } from '../domain/mappers';
 import { History, HistoryDocument } from '../schemas';
 
-
 export class HistoryRepository extends ModelRepository<HistoryDocument, HistoryEntity> {
   constructor(
     @InjectModel(History.name)
@@ -20,34 +19,30 @@ export class HistoryRepository extends ModelRepository<HistoryDocument, HistoryE
     super(historyModel, historyMapper);
   }
 
-    async getUserCurrentHistory(userId: string, limitation?: number): Promise<HistoryEntity[]> {
-        return this.find(
-            { ownerId: new Types.ObjectId(userId) },
-            undefined,
-            { 
-              sort: { createdAt: SortDirection.Ascending },
-              limit: limitation
-            }
-        );
-    }
+  async getUserCurrentHistory(userId: string, limitation?: number): Promise<HistoryEntity[]> {
+    return this.find({ ownerId: new Types.ObjectId(userId) }, undefined, {
+      sort: { createdAt: SortDirection.Ascending },
+      limit: limitation,
+    });
+  }
 
-    async getTodayHistory(userId: string, limitation?: number): Promise<HistoryEntity[]> {
-      const startOfDay = utc().startOf('day').toDate();
-      const endOfDay = utc().endOf('day').toDate();
+  async getTodayHistory(userId: string, limitation?: number): Promise<HistoryEntity[]> {
+    const startOfDay = utc().startOf('day').toDate();
+    const endOfDay = utc().endOf('day').toDate();
 
-      return this.find(
-        { 
-          ownerId: new Types.ObjectId(userId),
-          createdAt: {
-            $gte: startOfDay,
-            $lte: endOfDay
-          }
+    return this.find(
+      {
+        ownerId: new Types.ObjectId(userId),
+        createdAt: {
+          $gte: startOfDay,
+          $lte: endOfDay,
         },
-        undefined,
-        { 
-          sort: { createdAt: SortDirection.Ascending },
-          limit: limitation,
-        }
+      },
+      undefined,
+      {
+        sort: { createdAt: SortDirection.Ascending },
+        limit: limitation,
+      },
     );
-    }
+  }
 }

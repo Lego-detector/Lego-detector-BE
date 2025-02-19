@@ -16,27 +16,17 @@ export class HistoryService {
     private readonly historyRepository: HistoryRepository,
   ) {}
 
-    async isSessionQuotaRemain(userId: string, role: UserRole): Promise<boolean> {
-        const policy = ROLE_POLICY.get(role);
-        const quota = policy.SESSION_LIMIT;
-        const usedQuota = (await this.historyRepository.getTodayHistory(userId, quota)).length;
+  async isSessionQuotaRemain(userId: string, role: UserRole): Promise<boolean> {
+    const policy = ROLE_POLICY.get(role);
+    const quota = policy.SESSION_LIMIT;
+    const usedQuota = (await this.historyRepository.getTodayHistory(userId, quota)).length;
 
-        if (quota - usedQuota <= 0) {
-            return false
-        }
-
-        return true
+    if (quota - usedQuota <= 0) {
+      return false;
     }
 
-    async getUserCurrentHistory(userId: string, role: UserRole): Promise<HistoryEntity[]> {
-        const policy = ROLE_POLICY.get(role);
-        const limitation = policy.HISTORY_LIMIT;
-
-        return this.historyRepository.getUserCurrentHistory(userId, limitation);
-    }
-
-    async findById(historyId: string): Promise<HistoryEntity> {
-        const history = await this.historyRepository.findById(historyId);
+    return true;
+  }
 
   async getUserCurrentHistory(userId: string, role: UserRole): Promise<HistoryEntity[]> {
     const policy = ROLE_POLICY.get(role);
