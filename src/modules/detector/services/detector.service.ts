@@ -34,22 +34,16 @@ export class DetectorService {
   async createSession(
     userId: string,
     role: UserRole,
-    image: Express.Multer.File, 
+    image: Express.Multer.File,
   ): Promise<HistoryDocument> {
-    const hasQuota = await this.historyService.isSessionQuotaRemain(
-      userId,
-      role
-    ) 
+    const hasQuota = await this.historyService.isSessionQuotaRemain(userId, role);
 
     if (!hasQuota) {
       throw new ErrorException(CODES.OUT_OF_SESSION_QUOTA);
     }
 
-    const history = await this.historyService.create(
-      userId,
-      image
-    );
-    
+    const history = await this.historyService.create(userId, image);
+
     history.results = undefined;
 
     return history.toDocument();
