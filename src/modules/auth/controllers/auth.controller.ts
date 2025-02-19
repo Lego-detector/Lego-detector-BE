@@ -7,15 +7,12 @@ import { IAuthResponse } from 'src/shared';
 import { LocalSignInDto, LocalSignUpDto } from '../dto';
 import { AuthService } from '../services';
 
-
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('sign-in')
-  async signIn(
-    @Body() localSignInDto: LocalSignInDto
-  ): Promise<IAuthResponse> {
+  async signIn(@Body() localSignInDto: LocalSignInDto): Promise<IAuthResponse> {
     return this.authService.signIn(localSignInDto);
   }
 

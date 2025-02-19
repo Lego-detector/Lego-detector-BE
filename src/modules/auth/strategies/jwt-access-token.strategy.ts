@@ -10,7 +10,6 @@ import { CODES, ITokenPayload } from '../../../shared';
 import { UserEntity } from '../../user/domain/entities';
 import { UserService } from '../../user/services';
 
-
 @Injectable()
 export class JwtAccessTokenStrategy extends PassportStrategy(Strategy, 'jwt-access-token') {
   constructor(

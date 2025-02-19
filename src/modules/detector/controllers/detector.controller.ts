@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Query,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import { Types } from 'mongoose';
@@ -11,12 +19,11 @@ import { GetCompletedSessionDto } from '../dto';
 import { HistoryDocument } from '../schemas';
 import { DetectorService } from '../services';
 
-
 @UseGuards(JwtAccessGuard)
 @Controller('detector')
 export class DetectorController {
   constructor(private readonly detectorService: DetectorService) {}
-  
+
   @Get('results')
   async getCompletedSession(
     @Query() getCompletedSessionDto: GetCompletedSessionDto,
@@ -24,7 +31,7 @@ export class DetectorController {
   ): Promise<HistoryDocument> {
     return this.detectorService.getCompletedSession(
       getCompletedSessionDto.sessionId,
-      userId.toString()
+      userId.toString(),
     );
   }
 
@@ -35,10 +42,6 @@ export class DetectorController {
     image: Express.Multer.File,
     @CurrentUser() user: UserEntity,
   ): Promise<HistoryDocument> {
-    return this.detectorService.createSession(
-      user._id.toString(), 
-      user.role,
-      image
-    );
+    return this.detectorService.createSession(user._id.toString(), user.role, image);
   }
 }

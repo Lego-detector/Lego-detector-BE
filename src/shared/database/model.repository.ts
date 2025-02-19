@@ -154,9 +154,9 @@ export class ModelRepository<T extends Document, E extends BaseEntity<T>> {
         .lean<T>()
         .exec();
 
-        if (!deletedDoc) {
-          return null;
-        }
+      if (!deletedDoc) {
+        return null;
+      }
 
       return this.mapper.toEntity(deletedDoc);
     };

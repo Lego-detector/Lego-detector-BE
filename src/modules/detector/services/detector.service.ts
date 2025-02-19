@@ -9,19 +9,15 @@ import { BoundingBoxDocument, HistoryDocument } from '../schemas';
 
 import { HistoryService } from './history.service';
 
-
 @Injectable()
 export class DetectorService {
   constructor(
-    @InjectConnection() 
+    @InjectConnection()
     private readonly mongoConnection: Connection,
-    private readonly historyService: HistoryService
+    private readonly historyService: HistoryService,
   ) {}
 
-  async getCompletedSession(
-    sessionId: string, 
-    userId: string
-  ): Promise<HistoryDocument> {
+  async getCompletedSession(sessionId: string, userId: string): Promise<HistoryDocument> {
     const history = await this.historyService.findById(sessionId);
 
     if (!history.isCompleted()) {
@@ -38,34 +34,22 @@ export class DetectorService {
   async createSession(
     userId: string,
     role: UserRole,
-    image: Express.Multer.File, 
+    image: Express.Multer.File,
   ): Promise<HistoryDocument> {
-    const hasQuota = await this.historyService.isSessionQuotaRemain(
-      userId,
-      role
-    ) 
+    const hasQuota = await this.historyService.isSessionQuotaRemain(userId, role);
 
     if (!hasQuota) {
       throw new ErrorException(CODES.OUT_OF_SESSION_QUOTA);
     }
 
-    const history = await this.historyService.create(
-      userId,
-      image
-    );
-    
+    const history = await this.historyService.create(userId, image);
+
     history.results = undefined;
 
     return history.toDocument();
   }
 
-  async markSessionAsCompleted(
-    sessionId: string, 
-    results: BoundingBoxDocument[]
-  ): Promise<void> {
-    await this.historyService.updateHistoryResultsById(
-      sessionId, 
-      results
-    );
+  async markSessionAsCompleted(sessionId: string, results: BoundingBoxDocument[]): Promise<void> {
+    await this.historyService.updateHistoryResultsById(sessionId, results);
   }
 }

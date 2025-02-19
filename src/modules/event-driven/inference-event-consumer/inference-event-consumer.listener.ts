@@ -8,7 +8,6 @@ import { DetectorService } from '../../detector/services';
 
 import { InferenceEventConsumerService } from './inference-event-consumer.service';
 
-
 @Injectable()
 export class InferenceEventConsumerListener {
   constructor(
@@ -23,7 +22,7 @@ export class InferenceEventConsumerListener {
 
     // TODO: Temp code without transactioning mechanism
     await this.detectorService.markSessionAsCompleted(
-      inferenceResults.uid, 
+      inferenceResults.uid,
       inferenceResults.results,
     );
 

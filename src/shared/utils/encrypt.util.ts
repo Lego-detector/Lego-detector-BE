@@ -6,8 +6,6 @@ export const generateMd5Hash = (data: string): string => {
   return generateHash('md5', data);
 };
 
-
-
 export const generateSha256Hash = (data: string): string => {
   return generateHash('sha256', data);
 };
@@ -17,8 +15,6 @@ export const verifySha256Hash = async (data: string, hash: string): Promise<bool
 
   return verifyHash(hashedData, hash);
 };
-
-
 
 export const generateArgon2Hash = async (data: string): Promise<string> => {
   return argon2.hash(data, { type: argon2.argon2id });
@@ -32,7 +28,6 @@ export const verifyArgon2Hash = async (data: string, hash: string): Promise<bool
     return false;
   }
 };
-
 
 const generateHash = (
   algorithm: string,

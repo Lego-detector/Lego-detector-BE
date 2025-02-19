@@ -15,12 +15,12 @@ export type HistoryDocument = HydratedDocument<History>;
   versionKey: false,
 })
 export class History {
-  @Prop({ 
-    type: Types.ObjectId, 
+  @Prop({
+    type: Types.ObjectId,
     ref: User.name,
-    required: true
+    required: true,
   })
-  ownerId: Types.ObjectId
+  ownerId: Types.ObjectId;
 
   @Prop({ required: true })
   imageUrl: string;

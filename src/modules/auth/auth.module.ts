@@ -6,9 +6,8 @@ import { UserModule } from '../user/user.module';
 
 import { AuthController, AuthService, JwtAccessTokenStrategy, JwtRefreshTokenStrategy } from '.';
 
-
 @Module({
-  imports: [ JwtModule, UserModule, PassportModule ],
+  imports: [JwtModule, UserModule, PassportModule],
   controllers: [AuthController],
   providers: [AuthService, JwtAccessTokenStrategy, JwtRefreshTokenStrategy],
 })

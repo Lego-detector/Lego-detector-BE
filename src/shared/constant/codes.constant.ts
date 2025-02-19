@@ -73,4 +73,19 @@ export const CODES: ICodeObj = {
     display: 'ไม่พบข้อมูลประวัติการตรวจจับ',
     statusCode: HttpStatus.NOT_FOUND,
   },
+  MIMETYPE_MISMATCH: {
+    message: 'File type mismatch policy.',
+    display: 'อัพโหลดไฟล์ผิดประเภท',
+    statusCode: HttpStatus.BAD_REQUEST,
+  },
+  FILE_REQUIRED: {
+    message: 'File Required.',
+    display: 'ต้องการไฟล์',
+    statusCode: HttpStatus.BAD_REQUEST,
+  },
+  FAILED_TO_UPLOAD: {
+    message: 'Failed to upload file.',
+    display: 'ไม่สามารถอัพโหลดไฟล์ได้',
+    statusCode: HttpStatus.SERVICE_UNAVAILABLE,
+  },
 };
