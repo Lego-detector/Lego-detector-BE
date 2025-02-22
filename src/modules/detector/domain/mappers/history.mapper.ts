@@ -12,13 +12,4 @@ export class HistoryMapper extends BaseMapper<HistoryDocument, HistoryEntity> {
       results: historyDoc.results,
     });
   }
-
-  toDocument(history: HistoryEntity): Partial<HistoryDocument> {
-    return {
-      _id: history._id,
-      status: history.status,
-      imageUrl: history.imageUrl,
-      results: history.results,
-    };
-  }
 }

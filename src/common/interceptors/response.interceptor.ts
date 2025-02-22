@@ -14,7 +14,7 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, IResponse<T>> 
     return next.handle().pipe(
       map(data => {
         const response = context.switchToHttp().getResponse();
-        const { statusCode, ...detail } = mapResponse(CODES.SUCCESS, data);
+        const { statusCode, ...detail } = mapResponse(CODES.OK, data);
 
         response.status(statusCode);
 

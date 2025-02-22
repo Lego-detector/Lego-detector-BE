@@ -3,11 +3,12 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { MinioClientModule } from '../minio-client';
 
-import { DetectorController } from './controller';
-import { HistoryMapper } from './domain/mapper';
-import { HistoryRepository } from './repository';
+import { DetectorController } from './controllers';
+import { HistoryMapper } from './domain/mappers';
+import { HistoryRepository } from './repositories';
 import { History, HistorySchema } from './schemas';
 import { DetectorService } from './services';
+import { HistoryService } from './services/history.service';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { DetectorService } from './services';
     MinioClientModule,
   ],
   controllers: [DetectorController],
-  providers: [DetectorService, HistoryRepository, HistoryMapper],
-  exports: [HistoryRepository],
+  providers: [DetectorService, HistoryService, HistoryRepository, HistoryMapper],
+  exports: [HistoryService, HistoryRepository],
 })
 export class DetectorModule {}

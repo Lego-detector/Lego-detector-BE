@@ -1,27 +1,23 @@
 import { Injectable } from '@nestjs/common';
+import { InjectConnection } from '@nestjs/mongoose';
 
-import { MinioClientService } from 'src/modules/minio-client';
-import { HistoryStatus } from 'src/shared';
+import { Connection } from 'mongoose';
 
-import { HistoryRepository } from '../repository';
+
 import { HistoryDocument } from '../schemas';
+
+import { HistoryService } from './history.service';
 
 @Injectable()
 export class DetectorService {
   constructor(
-    private readonly historyRepository: HistoryRepository,
-    private readonly minioClientService: MinioClientService,
+    @InjectConnection() 
+    private readonly moncoConnection: Connection,
+    private readonly historyService: HistoryService
   ) {}
 
   async createSession(image: Express.Multer.File): Promise<HistoryDocument> {
-    const imageUrl = await this.minioClientService.upload('temp', image);
-    const history = await this.historyRepository.save({
-      status: HistoryStatus.PENDING,
-      imageUrl,
-    });
-
-    const { results, ...response } = history.toDocument();
-
-    return response as HistoryDocument;
+    // check amount of user history before create history
+    return (await this.historyService.create(image)).toDocument();
   }
 }

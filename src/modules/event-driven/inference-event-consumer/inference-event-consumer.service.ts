@@ -33,7 +33,7 @@ export class InferenceEventConsumerService implements OnModuleInit {
     if (this.channel) {
       await this.channel.ack(msg);
     } else {
-      throw new ErrorException(CODES.SUCCESS, 'temp throw error');
+      throw new ErrorException(CODES.MQ_UNAVAILABLE);
     }
   }
 }

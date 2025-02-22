@@ -1,20 +1,24 @@
 import { HistoryStatus } from 'src/shared';
-import { BaseEntity } from 'src/shared/base/base.entity';
+import { AutoGetter, BaseEntity } from 'src/shared/base/base.entity';
 
 import { BoundingBoxDocument, HistoryDocument } from '../../schemas';
-import { HistoryMapper } from '../mapper';
 
+@AutoGetter
 export class HistoryEntity extends BaseEntity<HistoryDocument> {
+  private historyDoc: HistoryDocument;
+
   imageUrl: string;
-  status: HistoryStatus;
+  status: HistoryStatus = HistoryStatus.PENDING;
   results: BoundingBoxDocument[] = [];
 
   constructor(history: Partial<HistoryDocument>) {
     super();
+
     Object.assign(this, history);
+    this.historyDoc = history as HistoryDocument;
   }
 
-  toDocument(): Partial<HistoryDocument> {
-    return new HistoryMapper().toDocument(this);
+  toDocument(): HistoryDocument {
+    return this.historyDoc;
   }
 }
