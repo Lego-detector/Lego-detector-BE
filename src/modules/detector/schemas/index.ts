@@ -1,3 +1,3 @@
-export * from './bounding-box.schema'
+export * from './bounding-box.schema';
 
-export * from './history.schema'
+export * from './history.schema';

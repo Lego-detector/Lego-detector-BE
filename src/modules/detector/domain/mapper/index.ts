@@ -1,1 +1,1 @@
-export * from './history.mapper'
+export * from './history.mapper';

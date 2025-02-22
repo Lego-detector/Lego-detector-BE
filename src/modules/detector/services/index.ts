@@ -1,1 +1,1 @@
-export * from './detector.service'
+export * from './detector.service';
