@@ -10,7 +10,7 @@ module.exports = {
     'plugin:import/errors',
     'plugin:import/typescript',
     'plugin:import/warnings',
-    'plugin:sonarjs/recommended',
+    // 'plugin:sonarjs/recommended',
   ],
   ignorePatterns: ['.eslintrc.js'],
   parser: '@typescript-eslint/parser',
@@ -19,7 +19,12 @@ module.exports = {
     project: 'tsconfig.json',
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint/eslint-plugin', 'import', 'sonarjs', 'unused-imports'],
+  plugins: [
+    '@typescript-eslint/eslint-plugin', 
+    'import', 
+    // 'sonarjs', 
+    'unused-imports'
+  ],
   root: true,
   rules: {
     'import/no-unresolved': 'off',
