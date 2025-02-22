@@ -1,55 +1,43 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MongooseModule } from '@nestjs/mongoose';
-
-import { AmqpModule } from 'nestjs-amqp';
 
 import { AppService } from './app.service';
 import { ENV, envObject } from './config';
-import { 
-  CdcListenerModule,
-  DetectorModule, 
-  InferenceResultHandlerModule, 
-  MinioClientModule, 
-  UserModule
+import {
+  DetectorModule,
+  InferenceEventConsumerModule,
+  MSGRelayModule,
+  MinioClientModule,
+  RabbitMqModule,
+  UserModule,
 } from './modules';
 import { AdminModule } from './modules/admin/admin.module';
-import { RabbitMqModule } from './modules/worker-modules/rabbit-mq/rabbit-mq.module';
-
 
 @Module({
-  imports: [    
+  imports: [
     ConfigModule.forRoot({
       validationSchema: envObject,
       isGlobal: true,
     }),
     MongooseModule.forRootAsync({
-      imports: [ ConfigModule ],
+      imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         uri: configService.get<string>(ENV.MONGO_URI),
         verboseRetryLog: true,
       }),
-      inject: [ ConfigService ],
+      inject: [ConfigService],
     }),
-    AmqpModule.forRootAsync({
-      useFactory: async (configService: ConfigService) => ({
-          hostname: configService.get<string>(ENV.MQ_HOSTNAME),
-          port: configService.get<number>(ENV.MQ_PORT),
-          username: configService.get<string>(ENV.MQ_USER),
-          password: configService.get<string>(ENV.MQ_PWD),
-      }),
-      inject: [ ConfigService ],
-    }),
+    EventEmitterModule.forRoot(),
     MinioClientModule,
     DetectorModule,
     UserModule,
     AdminModule,
-    CdcListenerModule,
-    InferenceResultHandlerModule,
+    MSGRelayModule,
+    InferenceEventConsumerModule,
     RabbitMqModule,
   ],
-  providers: [
-    AppService
-  ],
+  providers: [AppService],
 })
 export class AppModule {}

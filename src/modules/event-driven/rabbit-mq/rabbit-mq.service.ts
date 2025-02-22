@@ -1,0 +1,54 @@
+import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+
+import * as amqp from 'amqplib';
+
+import { ENV } from 'src/config';
+import { QUEUE_NAME } from 'src/shared';
+
+@Injectable()
+export class RabbitMqService implements OnModuleInit, OnModuleDestroy {
+  private readonly logger: Logger = new Logger(RabbitMqService.name);
+  private channel: amqp.Channel;
+  private connection: amqp.Connection;
+
+  constructor(private readonly configService: ConfigService) {}
+
+  async onModuleInit() {
+    const connectionString = this.configService.get<string>(ENV.MQ_URI);
+
+    this.connection = await amqp.connect(connectionString);
+    this.channel = await this.connection.createChannel();
+
+    await Promise.all([
+      this.channel.assertQueue(QUEUE_NAME.INFERENCE_RESPONSE, { durable: true }),
+      this.channel.assertQueue(QUEUE_NAME.INFERENCE_SESSION, { durable: true }),
+    ]);
+  }
+
+  getChannel(): amqp.Channel {
+    return this.channel;
+  }
+
+  async sendMessage(queueName: string, msg: string) {
+    this.channel.sendToQueue(queueName, Buffer.from(msg), { persistent: true });
+  }
+
+  async close(): Promise<void> {
+    try {
+      await this.channel.close();
+    } finally {
+      console.log('hi');
+    }
+
+    try {
+      await this.connection.close();
+    } finally {
+      console.log('hi');
+    }
+  }
+
+  async onModuleDestroy() {
+    await this.close();
+  }
+}
