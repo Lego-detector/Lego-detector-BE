@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { ErrorException } from 'src/common';
 import { HistoryDocument } from 'src/modules/detector/schemas';
 import { HistoryService } from 'src/modules/detector/services';
-import { CODES, IPaginationResponse, PaginationDto } from 'src/shared';
+import { CODES, IPaginationResponse, PaginationDto, UserRole } from 'src/shared';
 
 import { MinioClientService } from '../../minio-client';
 import { UserEntity } from '../domain/entities';
@@ -80,9 +80,7 @@ export class UserService {
 
     user.revokeRefreshToken();
 
-    const { _id, ...updateQuery } = user.toDocument();
-
-    await this.userRepository.findByIdAndUpdate(userId, updateQuery);
+    await this.updateUserById(userId, user);
   }
 
   async updateRefreshToken(userId: string, refreshToken: string): Promise<void> {
@@ -90,8 +88,20 @@ export class UserService {
 
     user.updateRefreshToken(refreshToken);
 
+    await this.updateUserById(userId, user);
+  }
+
+  async updateRole(userId: string, role: UserRole): Promise<void> {
+    const user = await this.findById(userId);
+    
+    user.updateRole(role);
+
+    await this.updateUserById(userId, user);
+  }
+
+  private updateUserById(userId: string, user: UserEntity): Promise<UserEntity> {
     const { _id, ...updateQuery } = user.toDocument();
 
-    await this.userRepository.findByIdAndUpdate(userId, updateQuery);
+    return this.userRepository.findByIdAndUpdate(userId, updateQuery)
   }
 }

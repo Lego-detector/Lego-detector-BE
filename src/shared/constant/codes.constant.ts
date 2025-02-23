@@ -13,6 +13,11 @@ export const CODES: ICodeObj = {
     display: 'ข้อมูลที่ส่งมาไม่ถูกต้อง',
     statusCode: HttpStatus.BAD_REQUEST,
   },
+  FORBIDDEN: {
+    message: 'Forbidden.',
+    display: 'ไม่มีสิทธิ์เข้าถึงข้อมูลส่วนนี้',
+    statusCode: HttpStatus.FORBIDDEN,
+  },
   NOT_FOUND: {
     message: 'Not found.',
     display: 'ไม่พบ endpoint ดังกล่าว',

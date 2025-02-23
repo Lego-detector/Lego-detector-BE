@@ -30,6 +30,10 @@ export class UserEntity extends BaseEntity<UserDocument> {
     return this.document;
   }
 
+  updateRole(role: UserRole): void {
+    this.role = role
+  }
+
   async hashPassword(): Promise<void> {
     this.password = await generateArgon2Hash(this.password);
   }
