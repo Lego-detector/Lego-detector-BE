@@ -1,11 +1,12 @@
 import { Body, Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-import { FileValidationPipe } from '../../common';
-import { IAuthResponse } from '../../shared/interfaces';
+import { FileValidationPipe } from 'src/common';
+import { IAuthResponse } from 'src/shared';
 
-import { AuthService } from './auth.service';
-import { LocalSignInDto, LocalSignUpDto } from './dto';
+import { LocalSignInDto, LocalSignUpDto } from '../dto';
+import { AuthService } from '../services';
+
 
 @Controller('auth')
 export class AuthController {

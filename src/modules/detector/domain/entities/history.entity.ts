@@ -1,24 +1,47 @@
+import { Types } from 'mongoose';
+
 import { HistoryStatus } from 'src/shared';
-import { AutoGetter, BaseEntity } from 'src/shared/base/base.entity';
+import { BaseEntity } from 'src/shared/base/base.entity';
 
 import { BoundingBoxDocument, HistoryDocument } from '../../schemas';
 
-@AutoGetter
 export class HistoryEntity extends BaseEntity<HistoryDocument> {
-  private historyDoc: HistoryDocument;
-
+  ownerId: Types.ObjectId
   imageUrl: string;
-  status: HistoryStatus = HistoryStatus.PENDING;
+  status: HistoryStatus = HistoryStatus.Pending;
   results: BoundingBoxDocument[] = [];
 
   constructor(history: Partial<HistoryDocument>) {
-    super();
+    super(history as HistoryDocument);
 
     Object.assign(this, history);
-    this.historyDoc = history as HistoryDocument;
   }
 
   toDocument(): HistoryDocument {
-    return this.historyDoc;
+    this.document.ownerId = this.ownerId;
+    this.document.imageUrl = this.imageUrl;
+    this.document.status = this.status;
+    this.document.results = this.results;
+
+    return this.document;
+  }
+
+  updateStatus(status: HistoryStatus): void {
+    this.status = status;
+  }
+
+  markAsCompleted(results: BoundingBoxDocument[]): void {
+    this.status = HistoryStatus.Completed;
+    this.results = results;
+  }
+
+  isCompleted(): boolean {
+    return this.status === HistoryStatus.Completed
+  }
+
+  isOwner(userId: string): boolean {
+    console.log(this.ownerId?.toString() === userId, this.ownerId?.toString(), userId);
+    
+    return this.ownerId?.toString() === userId;
   }
 }

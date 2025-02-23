@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
 import { ErrorException } from 'src/common';
+import { HistoryDocument } from 'src/modules/detector/schemas';
+import { HistoryService } from 'src/modules/detector/services';
 import { CODES } from 'src/shared';
 
 import { MinioClientService } from '../../minio-client';
@@ -12,8 +14,18 @@ import { UserRepository } from '../repositories';
 export class UserService {
   constructor (
     private readonly minioClientService: MinioClientService,
+    private readonly historyService: HistoryService,
     private readonly userRepository: UserRepository
   ) {}
+
+  async getHistory(user: UserEntity): Promise<HistoryDocument[]> {
+    const histories = await this.historyService.getUserCurrentHistory(
+      user._id.toString(),
+      user.role
+    );
+
+    return histories.map(entity => entity.toDocument());
+  }
 
   async findById(userId: string): Promise<UserEntity> {
     const user = this.userRepository.findById(userId);
@@ -54,7 +66,7 @@ export class UserService {
 
     //TODO: Create sessions to save new user then upload file to minio
     //If upload failed. Sessions will abort 
-    
+
     return this.userRepository.save(newUser.toDocument());
   }
 

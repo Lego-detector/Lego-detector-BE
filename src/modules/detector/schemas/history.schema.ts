@@ -1,7 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Types } from 'mongoose';
 
+import { User } from 'src/modules/user/schemas';
 import { COLLECTION_NAME, HistoryStatus } from 'src/shared';
 
 import { BoundingBox, BoundingBoxSchema } from './bounding-box.schema';
@@ -14,8 +15,12 @@ export type HistoryDocument = HydratedDocument<History>;
   versionKey: false,
 })
 export class History {
-  // @Prop({ type: UserSchema, required: true })
-  // userId: UserDocument
+  @Prop({ 
+    type: Types.ObjectId, 
+    ref: User.name,
+    required: true
+  })
+  ownerId: Types.ObjectId
 
   @Prop({ required: true })
   imageUrl: string;

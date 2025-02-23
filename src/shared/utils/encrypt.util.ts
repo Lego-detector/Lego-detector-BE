@@ -26,7 +26,7 @@ export const generateArgon2Hash = async (data: string): Promise<string> => {
 
 export const verifyArgon2Hash = async (data: string, hash: string): Promise<boolean> => {
   try {
-    return argon2.verify(hash, data);
+    return await argon2.verify(hash, data);
   } catch {
     //log here
     return false;

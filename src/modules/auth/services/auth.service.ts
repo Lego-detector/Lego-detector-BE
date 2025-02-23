@@ -2,14 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
-import { ErrorException } from '../../common';
-import { ENV } from '../../config';
-import { CODES } from '../../shared/constant';
-import { IAuthResponse, ICredentials, ITokenPayload } from '../../shared/interfaces';
-import { UserEntity } from '../user/domain/entities';
-import { UserService } from '../user/services';
+import { ErrorException } from 'src/common';
+import { ENV } from 'src/config';
+import { UserEntity } from 'src/modules/user/domain/entities';
+import { UserService } from 'src/modules/user/services';
+import { CODES, IAuthResponse, ICredentials, ITokenPayload } from 'src/shared';
 
-import { LocalSignInDto, LocalSignUpDto } from './dto';
+import { LocalSignInDto, LocalSignUpDto } from '../dto';
+
+
 
 
 @Injectable()
@@ -23,16 +24,20 @@ export class AuthService {
     async signIn(localSigninDto: LocalSignInDto): Promise<IAuthResponse> {
       const { email, password } = localSigninDto;
       const user = await this.userService.findOneByEmail(email);
-      /*
-      * Make sure response time is equal for every request.
-      * CAUTION: This approach makes the code harder to debug.
-      */
-     const isMatch = await user.verifyPassword(password);
 
-      if (!user || !isMatch) {
-        throw new ErrorException(CODES.UNAUTHORIZED);
+      if (!user) {
+        //REMIND: Dummy user for creating time safe signIn mechanism
+        await new UserEntity({ password: '' }).hashPassword();
+        ///////////////////////////////////////////////////////////////
+
+        throw new ErrorException(CODES.SIGNIN_FAILED);
       }
-      ///////////////////////////////////////////////////////////////
+
+      const isMatch = await user.verifyPassword(password)
+
+      if (!isMatch) {
+        throw new ErrorException(CODES.SIGNIN_FAILED);
+      }
       
       return this.createSignInResponse(user);
     }
