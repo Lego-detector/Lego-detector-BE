@@ -3,65 +3,70 @@ import { Injectable } from '@nestjs/common';
 import { Types } from 'mongoose';
 
 import { ErrorException } from '../../../common';
-import { CODES, HistoryStatus, UserRole } from '../../../shared';
+import { CODES, HistoryStatus, ROLE_POLICY, UserRole } from '../../../shared';
 import { MinioClientService } from '../../minio-client';
 import { HistoryEntity } from '../domain/entities';
 import { HistoryRepository } from '../repositories';
 import { BoundingBoxDocument } from '../schemas';
 
-
 @Injectable()
 export class HistoryService {
-    constructor(
-        private readonly minioClientService: MinioClientService,
-        private readonly historyRepository: HistoryRepository,
-    ) {}
+  constructor(
+    private readonly minioClientService: MinioClientService,
+    private readonly historyRepository: HistoryRepository,
+  ) {}
 
-    async getUserCurrentHistory(userId: string, _role: UserRole): Promise<HistoryEntity[]> {
-        //TODO: add limit for each rank
-        // get limit number from user role
+  async isSessionQuotaRemain(userId: string, role: UserRole): Promise<boolean> {
+    const policy = ROLE_POLICY.get(role);
+    const quota = policy.SESSION_LIMIT;
+    const usedQuota = (await this.historyRepository.getTodayHistory(userId, quota)).length;
 
-        return this.historyRepository.getUserCurrentHistory(userId, undefined);
+    if (quota - usedQuota <= 0) {
+      return false;
     }
 
-    async findById(historyId: string): Promise<HistoryEntity> {
-        const history = await this.historyRepository.findById(historyId);
+    return true;
+  }
 
-        if (!history) {
-            throw new ErrorException(CODES.HISTORY_NOT_FOUND);
-        }
+  async getUserCurrentHistory(userId: string, role: UserRole): Promise<HistoryEntity[]> {
+    const policy = ROLE_POLICY.get(role);
+    const limitation = policy.HISTORY_LIMIT;
 
-        return history;
+    return this.historyRepository.getUserCurrentHistory(userId, limitation);
+  }
+
+  async findById(historyId: string): Promise<HistoryEntity> {
+    const history = await this.historyRepository.findById(historyId);
+
+    if (!history) {
+      throw new ErrorException(CODES.HISTORY_NOT_FOUND);
     }
 
-    async updateHistoryResultsById(
-        historyId: string,
-        results: BoundingBoxDocument[]
-    ): Promise<HistoryEntity> {
-        // CAUTION: Not prevent updating completed status
-        const history = await this.findById(historyId);
+    return history;
+  }
 
-        history.markAsCompleted(results);
+  async updateHistoryResultsById(
+    historyId: string,
+    results: BoundingBoxDocument[],
+  ): Promise<HistoryEntity> {
+    // CAUTION: Not prevent updating completed status
+    const history = await this.findById(historyId);
 
-        await this.historyRepository.findByIdAndUpdate(
-            historyId, 
-            history.toDocument()
-        );
+    history.markAsCompleted(results);
 
-        return history;
-    }
+    await this.historyRepository.findByIdAndUpdate(historyId, history.toDocument());
 
-    async create(
-        ownerId: string, 
-        image: Express.Multer.File
-    ): Promise<HistoryEntity> {
-        const imageUrl = await this.minioClientService.upload('temp', image);
-        const history = new HistoryEntity({ 
-            status: HistoryStatus.Pending,
-            ownerId: new Types.ObjectId(ownerId),
-            imageUrl
-        }).toDocument();
+    return history;
+  }
 
-        return this.historyRepository.save(history);
-    }
+  async create(ownerId: string, image: Express.Multer.File): Promise<HistoryEntity> {
+    const imageUrl = await this.minioClientService.upload('temp', image);
+    const history = new HistoryEntity({
+      status: HistoryStatus.Pending,
+      ownerId: new Types.ObjectId(ownerId),
+      imageUrl,
+    }).toDocument();
+
+    return this.historyRepository.save(history);
+  }
 }

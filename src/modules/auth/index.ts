@@ -1,7 +1,7 @@
-export * from './controllers'
+export * from './controllers';
 
-export *from './services'
+export * from './services';
 
-export * from './dto'
+export * from './dto';
 
-export * from './strategies'
+export * from './strategies';

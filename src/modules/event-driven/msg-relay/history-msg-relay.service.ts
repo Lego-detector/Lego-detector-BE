@@ -26,7 +26,7 @@ export class HistoryMSGRelayService implements OnModuleInit {
         //   },
         // },
       ],
-      { fullDocument: 'whenAvailable' }
+      { fullDocument: 'whenAvailable' },
     );
 
     changeStream.on('change', async change => {

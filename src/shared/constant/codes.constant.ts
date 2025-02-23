@@ -63,9 +63,29 @@ export const CODES: ICodeObj = {
     display: 'ผู้ใช้ปัจจุบันไม่ได้เป็นเจ้าของหมายเลขเซสชั่นนี้',
     statusCode: HttpStatus.BAD_REQUEST,
   },
+  OUT_OF_SESSION_QUOTA: {
+    message: 'Out of sessions quota.',
+    display: 'ได้มีการใช้งานโควต้าการตรวจจับของวันนี้หมดแล้ว',
+    statusCode: HttpStatus.ACCEPTED,
+  },
   HISTORY_NOT_FOUND: {
     message: 'History not found.',
     display: 'ไม่พบข้อมูลประวัติการตรวจจับ',
     statusCode: HttpStatus.NOT_FOUND,
+  },
+  MIMETYPE_MISMATCH: {
+    message: 'File type mismatch policy.',
+    display: 'อัพโหลดไฟล์ผิดประเภท',
+    statusCode: HttpStatus.BAD_REQUEST,
+  },
+  FILE_REQUIRED: {
+    message: 'File Required.',
+    display: 'ต้องการไฟล์',
+    statusCode: HttpStatus.BAD_REQUEST,
+  },
+  FAILED_TO_UPLOAD: {
+    message: 'Failed to upload file.',
+    display: 'ไม่สามารถอัพโหลดไฟล์ได้',
+    statusCode: HttpStatus.SERVICE_UNAVAILABLE,
   },
 };

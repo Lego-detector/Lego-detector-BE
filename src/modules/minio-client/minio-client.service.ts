@@ -1,12 +1,13 @@
 import * as path from 'path';
 
-import { Injectable, Logger, ServiceUnavailableException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import * as Minio from 'minio';
 
+import { ErrorException } from 'src/common';
 import { ENV } from 'src/config';
-import { generateMd5Hash } from 'src/shared';
+import { CODES, generateMd5Hash } from 'src/shared';
 
 @Injectable()
 export class MinioClientService {
@@ -33,14 +34,14 @@ export class MinioClientService {
     suffixFileName: string = '',
     fixedFileName?: string,
   ): Promise<string> {
-    // if (!file || !file.buffer || !file.originalname) {
-    //   throw new ErrorException(CODES.TEC_042);
-    // }
+    if (!file || !file.buffer || !file.originalname) {
+      throw new ErrorException(CODES.FILE_REQUIRED);
+    }
 
     if (!supportedMimeTypes.test(file.mimetype)) {
-      // throw new ErrorException(CODES.TEC_019);
+      throw new ErrorException(CODES.MIMETYPE_MISMATCH);
     }
-    
+
     const ext = path.extname(file.originalname);
     const fileName = fixedFileName ? fixedFileName : this.generateFileName(file);
     const objectName = `${directoryName}/${fileName}${suffixFileName}${ext}`;
@@ -50,9 +51,7 @@ export class MinioClientService {
     return objectName;
   }
 
-  generateFileName(
-    file: Express.Multer.File,
-  ): string {
+  generateFileName(file: Express.Multer.File): string {
     const timestamp = Date.now().toString();
     const randomNumber = Math.random();
 
@@ -82,7 +81,7 @@ export class MinioClientService {
     } catch (error) {
       this.logger.error(error);
 
-      throw new ServiceUnavailableException('Failed to upload file');
+      throw new ErrorException(CODES.FAILED_TO_UPLOAD);
     }
   }
 }

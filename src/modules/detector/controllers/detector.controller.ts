@@ -1,21 +1,29 @@
-import { Controller, Get, Post, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Query,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import { Types } from 'mongoose';
 
 import { FileValidationPipe, JwtAccessGuard } from 'src/common';
 import { CurrentUser } from 'src/common/decorators';
+import { UserEntity } from 'src/modules/user/domain/entities';
 
 import { GetCompletedSessionDto } from '../dto';
 import { HistoryDocument } from '../schemas';
 import { DetectorService } from '../services';
 
-
 @UseGuards(JwtAccessGuard)
 @Controller('detector')
 export class DetectorController {
   constructor(private readonly detectorService: DetectorService) {}
-  
+
   @Get('results')
   async getCompletedSession(
     @Query() getCompletedSessionDto: GetCompletedSessionDto,
@@ -23,7 +31,7 @@ export class DetectorController {
   ): Promise<HistoryDocument> {
     return this.detectorService.getCompletedSession(
       getCompletedSessionDto.sessionId,
-      userId.toString()
+      userId.toString(),
     );
   }
 
@@ -32,11 +40,8 @@ export class DetectorController {
   async createSession(
     @UploadedFile(new FileValidationPipe())
     image: Express.Multer.File,
-    @CurrentUser('_id') userId: Types.ObjectId,
+    @CurrentUser() user: UserEntity,
   ): Promise<HistoryDocument> {
-    return this.detectorService.createSession(
-      userId.toString(), 
-      image
-    );
+    return this.detectorService.createSession(user._id.toString(), user.role, image);
   }
 }

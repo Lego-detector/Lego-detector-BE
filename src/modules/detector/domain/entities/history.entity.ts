@@ -6,7 +6,7 @@ import { BaseEntity } from 'src/shared/base/base.entity';
 import { BoundingBoxDocument, HistoryDocument } from '../../schemas';
 
 export class HistoryEntity extends BaseEntity<HistoryDocument> {
-  ownerId: Types.ObjectId
+  ownerId: Types.ObjectId;
   imageUrl: string;
   status: HistoryStatus = HistoryStatus.Pending;
   results: BoundingBoxDocument[] = [];
@@ -36,12 +36,12 @@ export class HistoryEntity extends BaseEntity<HistoryDocument> {
   }
 
   isCompleted(): boolean {
-    return this.status === HistoryStatus.Completed
+    return this.status === HistoryStatus.Completed;
   }
 
   isOwner(userId: string): boolean {
     console.log(this.ownerId?.toString() === userId, this.ownerId?.toString(), userId);
-    
+
     return this.ownerId?.toString() === userId;
   }
 }

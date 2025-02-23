@@ -14,10 +14,10 @@ import { UserService } from './services';
   imports: [
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     MinioClientModule,
-    DetectorModule
+    DetectorModule,
   ],
   controllers: [UserController],
   providers: [UserService, UserRepository, UserMapper],
-  exports: [UserService, UserRepository, UserMapper]
+  exports: [UserService, UserRepository, UserMapper],
 })
 export class UserModule {}

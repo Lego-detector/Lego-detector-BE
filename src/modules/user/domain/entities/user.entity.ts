@@ -3,7 +3,6 @@ import { BaseEntity } from '../../../../shared/base';
 import { UserRole } from '../../../../shared/enum';
 import { UserDocument } from '../../schemas';
 
-
 export class UserEntity extends BaseEntity<UserDocument> {
   fname: string;
   lname: string;
@@ -46,5 +45,4 @@ export class UserEntity extends BaseEntity<UserDocument> {
   revokeRefreshToken(): void {
     this.refreshToken = undefined;
   }
-
 }

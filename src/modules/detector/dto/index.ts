@@ -1,3 +1,3 @@
-export * from './create-history.dto'
+export * from './create-history.dto';
 
-export * from './get-completed-session.dto'
+export * from './get-completed-session.dto';

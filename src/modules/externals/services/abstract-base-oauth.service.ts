@@ -7,9 +7,7 @@ export abstract class AbstractBaseOauthService {
     throw new NotImplementedException();
   }
 
-  async verifyAuthorizationCode(
-    _code: string,
-  ): Promise<unknown> {
+  async verifyAuthorizationCode(_code: string): Promise<unknown> {
     throw new NotImplementedException();
   }
 

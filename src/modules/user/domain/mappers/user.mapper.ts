@@ -3,7 +3,6 @@ import { BaseMapper } from 'src/shared/base';
 import { UserDocument } from '../../schemas';
 import { UserEntity } from '../entities';
 
-
 export class UserMapper extends BaseMapper<UserDocument, UserEntity> {
   toEntity(userDoc: UserDocument): UserEntity {
     return new UserEntity(userDoc);

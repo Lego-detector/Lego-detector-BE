@@ -10,10 +10,7 @@ export const validationExceptionFactory = (errors: ValidationError[]): ErrorExce
   return errorBuilder(CODES.BAD_REQUEST, JSON.stringify(message));
 };
 
-export const errorBuilder = (
-  code: ICode,
-  message?: string
-): ErrorException => {
+export const errorBuilder = (code: ICode, message?: string): ErrorException => {
   return new ErrorException(code, undefined, message);
 };
 

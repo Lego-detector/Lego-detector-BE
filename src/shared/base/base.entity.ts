@@ -9,7 +9,7 @@ export abstract class BaseEntity<T> {
   protected document: T;
 
   constructor(doc: Partial<T>) {
-    this.document = doc as T
+    this.document = doc as T;
   }
 
   toDocument(_entity: BaseEntity<T>): Partial<T> | T {
