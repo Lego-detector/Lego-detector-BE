@@ -3,12 +3,13 @@ import { Injectable } from '@nestjs/common';
 import { ErrorException } from 'src/common';
 import { HistoryDocument } from 'src/modules/detector/schemas';
 import { HistoryService } from 'src/modules/detector/services';
-import { CODES } from 'src/shared';
+import { CODES, IPaginationResponse, PaginationDto } from 'src/shared';
 
 import { MinioClientService } from '../../minio-client';
 import { UserEntity } from '../domain/entities';
 import { CreateUserDto } from '../dto';
 import { UserRepository } from '../repositories';
+import { UserDocument } from '../schemas';
 
 @Injectable()
 export class UserService {
@@ -17,6 +18,10 @@ export class UserService {
     private readonly historyService: HistoryService,
     private readonly userRepository: UserRepository,
   ) {}
+
+  async getPaginationUserList(paginationDto: PaginationDto): Promise<IPaginationResponse<UserDocument>> {
+    return this.userRepository.getPaginationUserList(paginationDto);
+  }
 
   async getHistory(user: UserEntity): Promise<HistoryDocument[]> {
     const histories = await this.historyService.getUserCurrentHistory(

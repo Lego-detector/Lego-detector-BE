@@ -9,3 +9,5 @@ export * from './oauth';
 export * from './token.interface';
 
 export * from './role-policy.interface';
+
+export * from './pagination.interface';

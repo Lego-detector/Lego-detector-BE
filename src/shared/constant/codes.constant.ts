@@ -73,6 +73,11 @@ export const CODES: ICodeObj = {
     display: 'ไม่พบข้อมูลประวัติการตรวจจับ',
     statusCode: HttpStatus.NOT_FOUND,
   },
+  INVALID_PAGINATION_PAGE: {
+    message: 'Invalid pagination page.',
+    display: 'ไม่พบหน้าที่ต้องการ',
+    statusCode: HttpStatus.NOT_FOUND,
+  },
   MIMETYPE_MISMATCH: {
     message: 'File type mismatch policy.',
     display: 'อัพโหลดไฟล์ผิดประเภท',

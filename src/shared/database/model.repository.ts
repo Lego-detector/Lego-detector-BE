@@ -8,8 +8,12 @@ import {
   UpdateQuery,
 } from 'mongoose';
 
+import { ErrorException } from 'src/common';
+
+import { CODES, IPaginationQuery, IPaginationResponse } from '..';
 import { BaseMapper } from '../base';
 import { BaseEntity } from '../base/base.entity';
+import { spiltQueryAndPaginationOptions } from '../utils/pagination.util';
 
 export class ModelRepository<T extends Document, E extends BaseEntity<T>> {
   constructor(
@@ -57,6 +61,61 @@ export class ModelRepository<T extends Document, E extends BaseEntity<T>> {
     }
 
     return this.mapper.toEntity(doc);
+  }
+
+  async findWithPagination(
+    query: IPaginationQuery<T>,
+    patternSearchProperties?: string[],
+    projection?: ProjectionType<T>,
+    populate?: string[],
+  ): Promise<IPaginationResponse<T>> {
+    const { filterQuery, paginationOptions } = spiltQueryAndPaginationOptions(query);
+    const { page, perPage, direction, sortedBy } = paginationOptions;
+    const numberOfSkipItems = (page - 1) * perPage;
+    const numberOfLimit = perPage;
+    const count = await this.model.countDocuments(filterQuery);
+    const lastPage = Math.ceil(count / perPage);
+    const prevPage = page - 1 <= 0 ? null : page - 1;
+    const nextPage = page === lastPage ? null : page + 1;
+
+    if (!count && page !== 1) {
+      throw new ErrorException(CODES.INVALID_PAGINATION_PAGE);
+    }
+
+    if (patternSearchProperties) {
+      for (const property of patternSearchProperties) {
+        const key = property as keyof typeof filterQuery;
+  
+        if (filterQuery[key])
+          filterQuery[key] = {
+            $regex: filterQuery[key],
+            $options: 'i',
+          };
+      }
+    }
+
+    const data = await this.model
+      .find(filterQuery, projection)
+      .populate(populate)
+      .skip(numberOfSkipItems)
+      .limit(numberOfLimit)
+      .sort({
+        [sortedBy]: direction,
+      })
+      .lean<T[]>()
+      .exec();
+
+    return {
+      metaData: {
+        count,
+        perPage,
+        prevPage,
+        currentPage: page,
+        nextPage,
+        lastPage,
+      },
+      data,
+    };
   }
 
   async save(entityData: unknown, session?: ClientSession): Promise<E> {
