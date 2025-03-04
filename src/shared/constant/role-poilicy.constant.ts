@@ -10,4 +10,11 @@ export const ROLE_POLICY = new Map<UserRole, IRolePolicy>([
       HISTORY_LIMIT: 5,
     },
   ],
+  [ 
+    UserRole.Admin,
+    {
+      SESSION_LIMIT: undefined,
+      HISTORY_LIMIT: undefined
+    }
+  ]
 ]);

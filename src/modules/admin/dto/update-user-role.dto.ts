@@ -8,6 +8,6 @@ export class UpdateUserRoleDto {
     userId: string
 
     @IsNotEmpty()
-    @IsEnum({ UserRole })
+    @IsEnum(UserRole)
     role: UserRole
 }
