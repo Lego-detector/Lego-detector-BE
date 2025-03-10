@@ -35,6 +35,13 @@ export class DetectorController {
     );
   }
 
+  @Get('quota')
+  async getRemainedQuota(
+    @CurrentUser() user: UserEntity,
+  ): Promise<number> {
+    return this.detectorService.getRemainedQuota(user._id.toString(), user.role);
+  }
+
   @Post('predict')
   @UseInterceptors(FileInterceptor('image'))
   async createSession(
