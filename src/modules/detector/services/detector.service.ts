@@ -4,7 +4,7 @@ import { InjectConnection } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
 
 import { ErrorException } from '../../../common';
-import { CODES, UserRole } from '../../../shared';
+import { CODES, ROLE_POLICY, UserRole } from '../../../shared';
 import { BoundingBoxDocument, HistoryDocument } from '../schemas';
 
 import { HistoryService } from './history.service';
@@ -36,7 +36,7 @@ export class DetectorService {
     role: UserRole,
     image: Express.Multer.File,
   ): Promise<HistoryDocument> {
-    const hasQuota = await this.historyService.isSessionQuotaRemain(userId, role);
+    const hasQuota = await this.isSessionQuotaRemain(userId, role);
 
     if (!hasQuota) {
       throw new ErrorException(CODES.OUT_OF_SESSION_QUOTA);
@@ -51,5 +51,23 @@ export class DetectorService {
 
   async markSessionAsCompleted(sessionId: string, results: BoundingBoxDocument[]): Promise<void> {
     await this.historyService.updateHistoryResultsById(sessionId, results);
+  }
+
+  async getRemainedQuota(userId: string, role: UserRole): Promise<number> {
+    const policy = ROLE_POLICY.get(role);
+    const quota = policy.SESSION_LIMIT;
+    const usedQuota = await this.historyService.getTodayHistoryNumber(userId);
+
+    return quota - usedQuota;
+  }
+
+  private async isSessionQuotaRemain(userId: string, role: UserRole): Promise<boolean> {
+    const remainedQuota = await this.getRemainedQuota(userId, role);
+
+    if (remainedQuota <= 0) {
+      return false;
+    }
+
+    return true;
   }
 }
