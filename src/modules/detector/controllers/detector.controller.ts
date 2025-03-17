@@ -16,14 +16,15 @@ import { CurrentUser } from 'src/common/decorators';
 import { UserEntity } from 'src/modules/user/domain/entities';
 
 import { GetCompletedSessionDto } from '../dto';
-import { HistoryDocument } from '../schemas';
+import { ClassNameDocument, HistoryDocument } from '../schemas';
 import { DetectorService } from '../services';
 
-@UseGuards(JwtAccessGuard)
+
 @Controller('detector')
 export class DetectorController {
   constructor(private readonly detectorService: DetectorService) {}
 
+  @UseGuards(JwtAccessGuard)
   @Get('results')
   async getCompletedSession(
     @Query() getCompletedSessionDto: GetCompletedSessionDto,
@@ -35,13 +36,12 @@ export class DetectorController {
     );
   }
 
-  @Get('quota')
-  async getRemainedQuota(
-    @CurrentUser() user: UserEntity,
-  ): Promise<number> {
-    return this.detectorService.getRemainedQuota(user._id.toString(), user.role);
+  @Get('class-names')
+  async getClassName(): Promise<ClassNameDocument[]> {
+    return this.detectorService.getClassName();
   }
 
+  @UseGuards(JwtAccessGuard)
   @Post('predict')
   @UseInterceptors(FileInterceptor('image'))
   async createSession(

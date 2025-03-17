@@ -13,6 +13,11 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const port = configService.get<number>(ENV.PORT);
 
+  app.enableCors({
+    allowedHeaders: 'Content-Type, Authorization',  // Allowed headers
+    credentials: true,                        // Allow cookies
+  });
+
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,

@@ -16,4 +16,11 @@ export class UserController {
   async getHistory(@CurrentUser() user: UserEntity): Promise<HistoryDocument[]> {
     return this.userService.getHistory(user);
   }
+
+  @Get('quota')
+  async getRemainedQuota(
+    @CurrentUser() user: UserEntity,
+  ): Promise<number> {
+    return this.userService.getRemainedQuota(user._id.toString(), user.role);
+  }
 }

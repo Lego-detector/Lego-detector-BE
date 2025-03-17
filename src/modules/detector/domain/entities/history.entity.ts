@@ -40,8 +40,6 @@ export class HistoryEntity extends BaseEntity<HistoryDocument> {
   }
 
   isOwner(userId: string): boolean {
-    console.log(this.ownerId?.toString() === userId, this.ownerId?.toString(), userId);
-
     return this.ownerId?.toString() === userId;
   }
 }
