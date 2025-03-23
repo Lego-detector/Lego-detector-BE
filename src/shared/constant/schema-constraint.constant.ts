@@ -6,4 +6,5 @@ export const SCHEMA_CONSTRAINTS = {
 export const COLLECTION_NAME = {
   USERS: 'users',
   HISTORIES: 'histories',
+  CLASSNAMES: 'class-names'
 };

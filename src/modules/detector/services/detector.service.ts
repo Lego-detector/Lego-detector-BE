@@ -1,21 +1,35 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
 import { InjectConnection } from '@nestjs/mongoose';
 
 import { Connection } from 'mongoose';
 
+import { UserService } from 'src/modules/user/services';
+
 import { ErrorException } from '../../../common';
-import { CODES, ROLE_POLICY, UserRole } from '../../../shared';
-import { BoundingBoxDocument, HistoryDocument } from '../schemas';
+import { CODES, UserRole } from '../../../shared';
+import { ClassNameRepository } from '../repositories/className.repository';
+import { BoundingBoxDocument, ClassNameDocument, HistoryDocument } from '../schemas';
 
 import { HistoryService } from './history.service';
 
 @Injectable()
 export class DetectorService {
+  private readonly logger: Logger = new Logger(DetectorService.name);
   constructor(
     @InjectConnection()
     private readonly mongoConnection: Connection,
     private readonly historyService: HistoryService,
+    private readonly classNameRepository: ClassNameRepository,
+
+    @Inject(forwardRef(() => UserService))
+    private readonly userService: UserService
   ) {}
+
+  async getClassName(): Promise<ClassNameDocument[]> {
+    const className = await this.classNameRepository.find({});
+
+    return className.map(cls => cls.toDocument());
+  }
 
   async getCompletedSession(sessionId: string, userId: string): Promise<HistoryDocument> {
     const history = await this.historyService.findById(sessionId);
@@ -51,18 +65,11 @@ export class DetectorService {
 
   async markSessionAsCompleted(sessionId: string, results: BoundingBoxDocument[]): Promise<void> {
     await this.historyService.updateHistoryResultsById(sessionId, results);
+    this.logger.log(`Job <${sessionId}> done`);
   }
 
-  async getRemainedQuota(userId: string, role: UserRole): Promise<number> {
-    const policy = ROLE_POLICY.get(role);
-    const quota = policy.SESSION_LIMIT;
-    const usedQuota = await this.historyService.getTodayHistoryNumber(userId);
-
-    return quota - usedQuota;
-  }
-
-  private async isSessionQuotaRemain(userId: string, role: UserRole): Promise<boolean> {
-    const remainedQuota = await this.getRemainedQuota(userId, role);
+  async isSessionQuotaRemain(userId: string, role: UserRole): Promise<boolean> {
+    const remainedQuota = await this.userService.getRemainedQuota(userId, role);
 
     if (remainedQuota <= 0) {
       return false;

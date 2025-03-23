@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 
 import { ErrorException } from 'src/common';
 import { HistoryDocument } from 'src/modules/detector/schemas';
 import { HistoryService } from 'src/modules/detector/services';
-import { CODES, IPaginationResponse, PaginationDto, UserRole } from 'src/shared';
+import { CODES, IPaginationResponse, PaginationDto, ROLE_POLICY, UserRole } from 'src/shared';
 
 import { MinioClientService } from '../../minio-client';
 import { UserEntity } from '../domain/entities';
@@ -15,8 +15,10 @@ import { UserDocument } from '../schemas';
 export class UserService {
   constructor(
     private readonly minioClientService: MinioClientService,
-    private readonly historyService: HistoryService,
     private readonly userRepository: UserRepository,
+
+    @Inject(forwardRef(() => HistoryService))
+    private readonly historyService: HistoryService,
   ) {}
 
   async getPaginationUserList(paginationDto: PaginationDto): Promise<IPaginationResponse<UserDocument>> {
@@ -103,5 +105,13 @@ export class UserService {
     const { _id, ...updateQuery } = user.toDocument();
 
     return this.userRepository.findByIdAndUpdate(userId, updateQuery)
+  }
+
+  async getRemainedQuota(userId: string, role: UserRole): Promise<number> {
+    const policy = ROLE_POLICY.get(role);
+    const quota = policy.SESSION_LIMIT;
+    const usedQuota = await this.historyService.getTodayHistoryNumber(userId);
+
+    return quota - usedQuota;
   }
 }
