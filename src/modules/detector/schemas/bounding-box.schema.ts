@@ -10,11 +10,12 @@ export type ClassNameDocument = HydratedDocument<ClassName>;
 
 @Schema({
   _id: false,
+  id: false,
   collection: COLLECTION_NAME.CLASSNAMES
 })
 export class ClassName {
   @Prop({ type: Number, required: true, unique: true })
-  id: number;
+  classId: number;
 
   @Prop({ required: true })
   className: string;

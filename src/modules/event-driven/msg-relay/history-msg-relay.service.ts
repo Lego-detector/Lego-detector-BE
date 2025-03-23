@@ -49,6 +49,6 @@ export class HistoryMSGRelayService implements OnModuleInit {
   private async InsertEventHandler(
     change: mongo.ChangeStreamInsertDocument<mongo.BSON.Document>,
   ): Promise<void> {
-    await this.eventEmitter.emitAsync(EVENT.HISTORY.CREATE, change.fullDocument as HistoryDocument);
+    this.eventEmitter.emit(EVENT.HISTORY.CREATE, change.fullDocument as HistoryDocument);
   }
 }
