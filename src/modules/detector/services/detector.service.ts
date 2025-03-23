@@ -3,6 +3,7 @@ import { InjectConnection } from '@nestjs/mongoose';
 
 import { Connection } from 'mongoose';
 
+import { MinioClientService } from 'src/modules/minio-client';
 import { UserService } from 'src/modules/user/services';
 
 import { ErrorException } from '../../../common';
@@ -20,6 +21,7 @@ export class DetectorService {
     private readonly mongoConnection: Connection,
     private readonly historyService: HistoryService,
     private readonly classNameRepository: ClassNameRepository,
+    private readonly minioService: MinioClientService,
 
     @Inject(forwardRef(() => UserService))
     private readonly userService: UserService
@@ -42,6 +44,8 @@ export class DetectorService {
       throw new ErrorException(CODES.SESSIONS_NOT_BELONG_TO_USER);
     }
 
+    history.expireIndex = undefined;
+
     return history.toDocument();
   }
 
@@ -59,13 +63,16 @@ export class DetectorService {
     const history = await this.historyService.create(userId, image);
 
     history.results = undefined;
+    history.expireIndex = undefined;
 
     return history.toDocument();
   }
 
   async markSessionAsCompleted(sessionId: string, results: BoundingBoxDocument[]): Promise<void> {
-    await this.historyService.updateHistoryResultsById(sessionId, results);
-    this.logger.log(`Job <${sessionId}> done`);
+    const isSuccess = await this.historyService.updateHistoryResultsById(sessionId, results);
+    const resMsg = isSuccess ? 'done' : 'expired'
+
+    this.logger.log(`Job <${sessionId}> ${resMsg}`);
   }
 
   async isSessionQuotaRemain(userId: string, role: UserRole): Promise<boolean> {

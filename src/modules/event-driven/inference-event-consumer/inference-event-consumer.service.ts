@@ -24,7 +24,7 @@ export class InferenceEventConsumerService implements OnModuleInit {
 
     this.channel.consume(QUEUE_NAME.INFERENCE_RESPONSE, async msg => {
       if (msg) {
-        await this.eventEmitter.emitAsync(EVENT.INFERENCE_SESSION.DONE, msg);
+        this.eventEmitter.emit(EVENT.INFERENCE_SESSION.DONE, msg);
       }
     });
   }

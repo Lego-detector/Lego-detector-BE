@@ -25,16 +25,4 @@ export class InferenceEventProducerService implements OnModuleInit {
 
     await this.channel.sendToQueue(QUEUE_NAME.INFERENCE_SESSION, resource, { persistent: true });
   }
-
-  // private initWorker() {
-  //   return fork(
-  //     path.resolve(__dirname, './worker'),
-  //     {
-  //       env: {
-  //         MQ_URI: this.configServiec.get<string>(ENV.MQ_URI),
-  //         queueName: QUEUE_NAME.INFERENCE_SESSION
-  //       }
-  //     }
-  //   );
-  // }
 }

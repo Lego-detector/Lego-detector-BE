@@ -33,6 +33,16 @@ export class History {
 
   @Prop({ type: [BoundingBoxSchema], default: [] })
   results: BoundingBox[];
+
+  @Prop({
+    required: false,
+    type: Date,
+    default: Date.now,
+    index: {
+      expires: 300,
+    },
+  })
+  expireIndex: Date;
 }
 
 export const HistorySchema = SchemaFactory.createForClass(History);

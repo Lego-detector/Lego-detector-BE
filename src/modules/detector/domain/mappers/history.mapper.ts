@@ -11,6 +11,7 @@ export class HistoryMapper extends BaseMapper<HistoryDocument, HistoryEntity> {
       status: historyDoc.status,
       imageUrl: historyDoc.imageUrl,
       results: historyDoc.results,
+      expireIndex: historyDoc.expireIndex
     });
   }
 }

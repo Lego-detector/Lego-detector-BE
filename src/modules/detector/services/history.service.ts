@@ -42,11 +42,20 @@ export class HistoryService {
     results: BoundingBoxDocument[],
   ): Promise<HistoryEntity> {
     // CAUTION: Not prevent updating completed status
-    const history = await this.findById(historyId);
+    const history = await this.historyRepository.findById(historyId);
+
+    if (!history) {
+      return;
+    }
 
     history.markAsCompleted(results);
 
-    await this.historyRepository.findByIdAndUpdate(historyId, history.toDocument());
+    const updateQuery = {
+      ...history.toDocument(),
+      $unset: { expireIndex: '' }
+    }
+
+    await this.historyRepository.findByIdAndUpdate(historyId, updateQuery);
 
     return history;
   }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 
 import { HistoryDocument } from 'src/modules/detector/schemas';
@@ -9,6 +9,8 @@ import { InferenceEventProducerService } from './inference-event-producer.servic
 
 @Injectable()
 export class InferenceEventProducerListener {
+  private readonly logger = new Logger(InferenceEventProducerListener.name);
+  
   constructor(
     private readonly inferenceEventProducerService: InferenceEventProducerService,
     private readonly minioClientService: MinioClientService,
@@ -23,5 +25,6 @@ export class InferenceEventProducerListener {
     };
 
     await this.inferenceEventProducerService.produce(jobEvent);
+
   }
 }

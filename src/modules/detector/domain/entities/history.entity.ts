@@ -9,6 +9,7 @@ export class HistoryEntity extends BaseEntity<HistoryDocument> {
   ownerId: Types.ObjectId;
   imageUrl: string;
   status: HistoryStatus = HistoryStatus.Pending;
+  expireIndex: Date = undefined;
   results: BoundingBoxDocument[] = [];
 
   constructor(history: Partial<HistoryDocument>) {
@@ -22,6 +23,7 @@ export class HistoryEntity extends BaseEntity<HistoryDocument> {
     this.document.imageUrl = this.imageUrl;
     this.document.status = this.status;
     this.document.results = this.results;
+    this.document.expireIndex = this.expireIndex;
 
     return this.document;
   }
@@ -32,6 +34,7 @@ export class HistoryEntity extends BaseEntity<HistoryDocument> {
 
   markAsCompleted(results: BoundingBoxDocument[]): void {
     this.status = HistoryStatus.Completed;
+    this.expireIndex = undefined;
     this.results = results;
   }
 
