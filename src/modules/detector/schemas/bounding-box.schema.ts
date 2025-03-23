@@ -2,7 +2,8 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 import { HydratedDocument } from 'mongoose';
 
-import { COLLECTION_NAME } from 'src/shared';
+import { COLLECTION_NAME } from '../../../shared';
+
 
 export type BoundingBoxDocument = HydratedDocument<BoundingBox>;
 

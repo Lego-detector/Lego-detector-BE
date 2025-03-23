@@ -3,15 +3,15 @@ import { InjectConnection } from '@nestjs/mongoose';
 
 import { Connection } from 'mongoose';
 
-import { MinioClientService } from 'src/modules/minio-client';
-import { UserService } from 'src/modules/user/services';
-
 import { ErrorException } from '../../../common';
 import { CODES, UserRole } from '../../../shared';
+import { MinioClientService } from '../../minio-client';
+import { UserService } from '../../user/services';
 import { ClassNameRepository } from '../repositories/className.repository';
 import { BoundingBoxDocument, ClassNameDocument, HistoryDocument } from '../schemas';
 
 import { HistoryService } from './history.service';
+
 
 @Injectable()
 export class DetectorService {

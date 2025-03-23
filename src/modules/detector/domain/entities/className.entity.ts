@@ -1,5 +1,5 @@
-import { BaseEntity } from 'src/shared/base/base.entity';
 
+import { BaseEntity } from '../../../../shared/base';
 import { ClassNameDocument } from '../../schemas';
 
 export class ClassNameEntity extends BaseEntity<ClassNameDocument> {

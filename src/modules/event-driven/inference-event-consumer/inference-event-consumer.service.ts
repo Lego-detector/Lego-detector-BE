@@ -3,10 +3,10 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 
 import * as amqp from 'amqplib';
 
-import { ErrorException } from 'src/common/exceptions';
-import { CODES, EVENT, QUEUE_NAME } from 'src/shared';
-
+import { ErrorException } from '../../../common';
+import { CODES, EVENT, QUEUE_NAME } from '../../../shared';
 import { RabbitMqService } from '../rabbit-mq/rabbit-mq.service';
+
 
 @Injectable()
 export class InferenceEventConsumerService implements OnModuleInit {

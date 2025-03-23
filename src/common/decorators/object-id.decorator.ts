@@ -3,8 +3,7 @@ import { ExecutionContext, createParamDecorator } from '@nestjs/common';
 import { Request } from 'express';
 import mongoose from 'mongoose';
 
-import { CODES } from 'src/shared';
-
+import { CODES } from '../../shared';
 import { ErrorException } from '../exceptions';
 
 export const ObjectId = createParamDecorator((key: string, context: ExecutionContext) => {

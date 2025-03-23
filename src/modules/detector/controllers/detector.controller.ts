@@ -11,10 +11,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 
 import { Types } from 'mongoose';
 
-import { FileValidationPipe, JwtAccessGuard } from 'src/common';
-import { CurrentUser } from 'src/common/decorators';
-import { UserEntity } from 'src/modules/user/domain/entities';
-
+import { FileValidationPipe, JwtAccessGuard } from '../../../common';
+import { CurrentUser } from '../../../common/decorators';
+import { UserEntity } from '../../user/domain/entities';
 import { GetCompletedSessionDto } from '../dto';
 import { ClassNameDocument, HistoryDocument } from '../schemas';
 import { DetectorService } from '../services';

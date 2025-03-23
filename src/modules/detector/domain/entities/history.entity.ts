@@ -1,8 +1,7 @@
 import { Types } from 'mongoose';
 
-import { HistoryStatus } from 'src/shared';
-import { BaseEntity } from 'src/shared/base/base.entity';
-
+import { HistoryStatus } from '../../../../shared';
+import { BaseEntity } from '../../../../shared/base';
 import { BoundingBoxDocument, HistoryDocument } from '../../schemas';
 
 export class HistoryEntity extends BaseEntity<HistoryDocument> {

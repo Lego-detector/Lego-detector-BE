@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
-import { UserDocument } from 'src/modules/user/schemas';
-import { UserService } from 'src/modules/user/services';
-import { IPaginationResponse } from 'src/shared';
-
+import { IPaginationResponse } from '../../../shared';
+import { UserDocument } from '../../user/schemas';
+import { UserService } from '../../user/services';
 import { GetUserDashboard, UpdateUserRoleDto } from '../dto';
 
 @Injectable()

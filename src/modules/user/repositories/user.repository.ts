@@ -2,9 +2,7 @@ import { InjectModel } from '@nestjs/mongoose';
 
 import { Model } from 'mongoose';
 
-
-import { PaginationDto } from 'src/shared';
-
+import { PaginationDto } from '../../../shared';
 import { ModelRepository } from '../../../shared/database';
 import { UserEntity } from '../domain/entities';
 import { UserMapper } from '../domain/mappers';

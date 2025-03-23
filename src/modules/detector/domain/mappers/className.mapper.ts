@@ -1,5 +1,5 @@
-import { BaseMapper } from 'src/shared/base';
 
+import { BaseMapper } from '../../../../shared/base';
 import { ClassNameDocument } from '../../schemas';
 import { ClassNameEntity } from '../entities/className.entity';
 

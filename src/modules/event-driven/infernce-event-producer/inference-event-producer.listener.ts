@@ -1,9 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 
-import { HistoryDocument } from 'src/modules/detector/schemas';
-import { MinioClientService } from 'src/modules/minio-client';
-import { EVENT, IJobEvent } from 'src/shared';
+import { EVENT, IJobEvent } from '../../../shared';
+import { HistoryDocument } from '../../detector/schemas';
+import { MinioClientService } from '../../minio-client';
 
 import { InferenceEventProducerService } from './inference-event-producer.service';
 

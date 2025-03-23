@@ -2,8 +2,7 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 
 import * as amqp from 'amqplib';
 
-import { IJobEvent, QUEUE_NAME } from 'src/shared';
-
+import { IJobEvent, QUEUE_NAME } from '../../../shared';
 import { RabbitMqService } from '../rabbit-mq/rabbit-mq.service';
 
 @Injectable()

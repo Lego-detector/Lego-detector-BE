@@ -2,8 +2,8 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 import { HydratedDocument, Types } from 'mongoose';
 
-import { User } from 'src/modules/user/schemas';
-import { COLLECTION_NAME, HistoryStatus } from 'src/shared';
+import { COLLECTION_NAME, HistoryStatus } from '../../../shared';
+import { User } from '../../user/schemas';
 
 import { BoundingBox, BoundingBoxSchema } from './bounding-box.schema';
 

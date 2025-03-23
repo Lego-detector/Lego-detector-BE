@@ -1,6 +1,7 @@
 import { NotImplementedException } from '@nestjs/common';
 
-import { IOauthProfile } from 'src/shared/interfaces';
+import { IOauthProfile } from '../../../shared';
+
 
 export abstract class AbstractBaseOauthService {
   getLoginLink(): string {

@@ -1,10 +1,9 @@
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
 
-import { ErrorException } from 'src/common';
-import { HistoryDocument } from 'src/modules/detector/schemas';
-import { HistoryService } from 'src/modules/detector/services';
-import { CODES, IPaginationResponse, PaginationDto, ROLE_POLICY, UserRole } from 'src/shared';
-
+import { ErrorException } from '../../../common';
+import { CODES, IPaginationResponse, PaginationDto, ROLE_POLICY, UserRole } from '../../../shared';
+import { HistoryDocument } from '../../detector/schemas';
+import { HistoryService } from '../../detector/services';
 import { MinioClientService } from '../../minio-client';
 import { UserEntity } from '../domain/entities';
 import { CreateUserDto } from '../dto';

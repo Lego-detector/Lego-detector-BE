@@ -3,12 +3,12 @@ import { InjectModel } from '@nestjs/mongoose';
 import { utc } from 'moment';
 import { Model, Types } from 'mongoose';
 
-import { SortDirection } from 'src/shared';
-import { ModelRepository } from 'src/shared/database/model.repository';
-
+import { SortDirection } from '../../../shared';
+import { ModelRepository } from '../../../shared/database';
 import { HistoryEntity } from '../domain/entities';
 import { HistoryMapper } from '../domain/mappers';
 import { History, HistoryDocument } from '../schemas';
+
 
 export class HistoryRepository extends ModelRepository<HistoryDocument, HistoryEntity> {
   constructor(
