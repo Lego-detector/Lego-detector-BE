@@ -4,8 +4,9 @@ import { InjectConnection } from '@nestjs/mongoose';
 
 import { Connection, mongo } from 'mongoose';
 
-import { HistoryDocument } from 'src/modules/detector/schemas';
-import { COLLECTION_NAME, EVENT } from 'src/shared';
+import { COLLECTION_NAME, EVENT } from '../../../shared';
+import { HistoryDocument } from '../../detector/schemas';
+
 
 @Injectable()
 export class HistoryMSGRelayService implements OnModuleInit {

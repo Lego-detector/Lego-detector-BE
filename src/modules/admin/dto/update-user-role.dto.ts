@@ -1,6 +1,7 @@
 import { IsEnum, IsMongoId, IsNotEmpty } from 'class-validator'
 
-import { UserRole } from 'src/shared'
+import { UserRole } from '../../../shared'
+
 
 export class UpdateUserRoleDto {
     @IsNotEmpty()

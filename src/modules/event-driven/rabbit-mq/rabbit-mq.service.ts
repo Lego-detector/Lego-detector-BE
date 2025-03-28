@@ -3,14 +3,15 @@ import { ConfigService } from '@nestjs/config';
 
 import * as amqp from 'amqplib';
 
-import { ENV } from 'src/config';
-import { QUEUE_NAME } from 'src/shared';
+import { ENV } from '../../../config';
+import { QUEUE_NAME } from '../../../shared';
+
 
 @Injectable()
 export class RabbitMqService implements OnModuleInit, OnModuleDestroy {
   private readonly logger: Logger = new Logger(RabbitMqService.name);
   private channel: amqp.Channel;
-  private connection: amqp.Connection;
+  private connection: amqp.ChannelModel;
 
   constructor(private readonly configService: ConfigService) {}
 

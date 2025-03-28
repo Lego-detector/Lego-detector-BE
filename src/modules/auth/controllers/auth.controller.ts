@@ -1,9 +1,8 @@
 import { Body, Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-import { FileValidationPipe } from 'src/common';
-import { IAuthResponse } from 'src/shared';
-
+import { FileValidationPipe } from '../../../common';
+import { IAuthResponse } from '../../../shared';
 import { LocalSignInDto, LocalSignUpDto } from '../dto';
 import { AuthService } from '../services';
 

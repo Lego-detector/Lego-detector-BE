@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import { MinioClientModule } from 'src/modules/minio-client';
-
+import { MinioClientModule } from '../../minio-client';
 import { InferenceEventProducerModule } from '../infernce-event-producer/inference-event-producer.module';
 
 import { HistoryMSGRelayService } from './history-msg-relay.service';

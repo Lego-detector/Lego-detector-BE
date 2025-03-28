@@ -3,15 +3,15 @@ import { InjectConnection } from '@nestjs/mongoose';
 
 import { Connection } from 'mongoose';
 
-import { MinioClientService } from 'src/modules/minio-client';
-import { UserService } from 'src/modules/user/services';
-
 import { ErrorException } from '../../../common';
-import { CODES, UserRole } from '../../../shared';
+import { CODES, ISessionResultsReponse, UserRole } from '../../../shared';
+import { MinioClientService } from '../../minio-client';
+import { UserService } from '../../user/services';
 import { ClassNameRepository } from '../repositories/className.repository';
 import { BoundingBoxDocument, ClassNameDocument, HistoryDocument } from '../schemas';
 
 import { HistoryService } from './history.service';
+
 
 @Injectable()
 export class DetectorService {
@@ -33,7 +33,7 @@ export class DetectorService {
     return className.map(cls => cls.toDocument());
   }
 
-  async getCompletedSession(sessionId: string, userId: string): Promise<HistoryDocument> {
+  async getCompletedSession(sessionId: string, userId: string): Promise<ISessionResultsReponse> {
     const history = await this.historyService.findById(sessionId);
 
     if (!history.isCompleted()) {
@@ -46,7 +46,26 @@ export class DetectorService {
 
     history.expireIndex = undefined;
 
-    return history.toDocument();
+    return {
+      history: history.toDocument(),
+      summary: this.summaryInferenceResults(history.results)
+    }
+  }
+
+  private summaryInferenceResults(results: BoundingBoxDocument[]): Record<number, number> {
+    const summary = new Map();
+
+    results.forEach(res => {
+      let val = 1;
+
+      if (summary.has(res.classId)) {
+        val += summary.get(res.classId);
+      }
+
+      summary.set(res.classId, val);
+    });
+
+    return Object.fromEntries(summary);
   }
 
   async createSession(

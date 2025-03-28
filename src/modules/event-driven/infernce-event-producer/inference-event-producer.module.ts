@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
-import { MinioClientModule } from 'src/modules/minio-client';
-
+import { MinioClientModule } from '../../minio-client';
 import { RabbitMqModule } from '../rabbit-mq/rabbit-mq.module';
 
 import { InferenceEventProducerListener } from './inference-event-producer.listener';

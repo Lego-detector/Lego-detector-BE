@@ -1,5 +1,5 @@
-import { BaseMapper } from 'src/shared/base';
 
+import { BaseMapper } from '../../../../shared/base';
 import { HistoryDocument } from '../../schemas';
 import { HistoryEntity } from '../entities';
 

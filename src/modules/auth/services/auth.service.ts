@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
-import { ErrorException } from 'src/common';
-import { ENV } from 'src/config';
-import { UserEntity } from 'src/modules/user/domain/entities';
-import { UserService } from 'src/modules/user/services';
-import { CODES, IAuthResponse, ICredentials, ITokenPayload, generateArgon2Hash } from 'src/shared';
-
+import { ErrorException } from '../../../common';
+import { ENV } from '../../../config';
+import { CODES, IAuthResponse, ICredentials, ITokenPayload, generateArgon2Hash } from '../../../shared';
+import { UserEntity } from '../../user/domain/entities';
+import { UserService } from '../../user/services';
 import { LocalSignInDto, LocalSignUpDto } from '../dto';
+
 
 @Injectable()
 export class AuthService {

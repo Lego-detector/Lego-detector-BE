@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 import { HydratedDocument } from 'mongoose';
 
-import { COLLECTION_NAME, SCHEMA_CONSTRAINTS, UserRole } from 'src/shared';
+import { COLLECTION_NAME, SCHEMA_CONSTRAINTS, UserRole } from '../../../shared';
 
 export type UserDocument = HydratedDocument<User>;
 

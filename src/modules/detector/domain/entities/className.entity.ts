@@ -1,10 +1,11 @@
-import { BaseEntity } from 'src/shared/base/base.entity';
 
+import { BaseEntity } from '../../../../shared/base';
 import { ClassNameDocument } from '../../schemas';
 
 export class ClassNameEntity extends BaseEntity<ClassNameDocument> {
-  id: number
+  classId: number
   className: string
+  label: string
 
   constructor(classNameDoc: Partial<ClassNameDocument>) {
     super(classNameDoc as ClassNameDocument);
@@ -13,8 +14,9 @@ export class ClassNameEntity extends BaseEntity<ClassNameDocument> {
   }
 
   toDocument(): ClassNameDocument {
-    this.document.id = this.id;
+    this.document.classId = this.classId;
     this.document.className = this.className;
+    this.document.label = this.label;
 
     return this.document;
   }

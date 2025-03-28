@@ -3,7 +3,8 @@ import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nes
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { CODES, IResponse, mapResponse } from 'src/shared';
+import { CODES, IResponse, mapResponse } from '../../shared';
+
 
 @Injectable()
 export class ResponseInterceptor<T> implements NestInterceptor<T, IResponse<T>> {

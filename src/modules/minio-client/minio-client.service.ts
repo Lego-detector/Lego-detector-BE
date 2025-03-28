@@ -5,9 +5,10 @@ import { ConfigService } from '@nestjs/config';
 
 import * as Minio from 'minio';
 
-import { ErrorException } from 'src/common';
-import { ENV } from 'src/config';
-import { CODES, generateMd5Hash } from 'src/shared';
+import { ErrorException } from '../../common';
+import { ENV } from '../../config';
+import { CODES, generateMd5Hash } from '../../shared';
+
 
 @Injectable()
 export class MinioClientService {

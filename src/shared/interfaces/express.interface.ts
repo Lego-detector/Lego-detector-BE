@@ -1,4 +1,4 @@
-import { UserDocument } from 'src/modules/user/schemas';
+import { UserDocument } from '../../modules/user/schemas';
 
 declare module 'express' {
   export interface Request {

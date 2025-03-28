@@ -1,6 +1,7 @@
 import { Types } from 'mongoose';
 
-import { BoundingBoxDocument } from 'src/modules/detector/schemas';
+import { BoundingBoxDocument } from '../../modules/detector/schemas';
+
 
 export interface IJobEvent {
   uid: Types.ObjectId;

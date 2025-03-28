@@ -1,8 +1,7 @@
 import { Body, Controller, Get, Patch, Query } from '@nestjs/common';
 
-import { UserDocument } from 'src/modules/user/schemas';
-import { IPaginationResponse, UserRole } from 'src/shared';
-
+import { IPaginationResponse, UserRole } from '../../../shared';
+import { UserDocument } from '../../user/schemas';
 import { GetUserDashboard, UpdateUserRoleDto } from '../dto';
 import { AdminService } from '../services';
 

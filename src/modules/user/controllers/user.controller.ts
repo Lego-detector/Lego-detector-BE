@@ -1,11 +1,11 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
 
-import { JwtAccessGuard } from 'src/common';
-import { CurrentUser } from 'src/common/decorators';
-import { HistoryDocument } from 'src/modules/detector/schemas';
-
+import { JwtAccessGuard } from '../../../common';
+import { CurrentUser } from '../../../common/decorators';
+import { HistoryDocument } from '../../detector/schemas';
 import { UserEntity } from '../domain/entities';
 import { UserService } from '../services';
+
 
 @UseGuards(JwtAccessGuard)
 @Controller('user')
