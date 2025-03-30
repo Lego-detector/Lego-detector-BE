@@ -54,15 +54,20 @@ export class AuthService {
     return this.createSignInResponse(newUser);
   }
 
-  async generateCredential(userId: string): Promise<ICredentials> {
-    return {
-      accessToken: this.generateAccessToken(userId),
-      refreshToken: await this.generateRefreshToken(userId),
-    };
+  async refreshAccessToken(user: UserEntity, token: string): Promise<ICredentials> {
+    const isMatch = await user.verifyRefreshToken(token);
+
+    if (isMatch) {
+      return {
+        accessToken: this.generateAccessToken(user._id.toString()),
+      }
+    }
+
+    throw new ErrorException(CODES.UNAUTHORIZED);
   }
 
-  async revokeToken(userId: string): Promise<void> {
-    this.userService.revokeRefreshToken(userId);
+  async revokeToken(user: UserEntity): Promise<void> {
+    this.userService.revokeRefreshToken(user._id.toString());
   }
 
   private async createSignInResponse(user: UserEntity): Promise<IAuthResponse> {
@@ -73,6 +78,13 @@ export class AuthService {
     return {
       credentials: await this.generateCredential(userDoc._id.toString()),
       profile: userDoc,
+    };
+  }
+
+  async generateCredential(userId: string): Promise<ICredentials> {
+    return {
+      accessToken: this.generateAccessToken(userId),
+      refreshToken: await this.generateRefreshToken(userId),
     };
   }
 
