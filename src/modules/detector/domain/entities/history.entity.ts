@@ -23,6 +23,7 @@ export class HistoryEntity extends BaseEntity<HistoryDocument> {
     this.document.status = this.status;
     this.document.results = this.results;
     this.document.expireIndex = this.expireIndex;
+    this.document.createdAt = this.createdAt;
 
     return this.document;
   }

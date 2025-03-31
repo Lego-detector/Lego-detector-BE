@@ -43,6 +43,12 @@ export class History {
     },
   })
   expireIndex: Date;
+
+  @Prop({
+    required: false,
+    default: Date.now,
+  })
+  createdAt: Date;
 }
 
 export const HistorySchema = SchemaFactory.createForClass(History);

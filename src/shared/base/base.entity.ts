@@ -1,6 +1,6 @@
 import { NotImplementedException } from '@nestjs/common';
 
-import { Date, Types } from 'mongoose';
+import { Types } from 'mongoose';
 
 export abstract class BaseEntity<T> {
   _id: Types.ObjectId;

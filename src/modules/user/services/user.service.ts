@@ -30,7 +30,13 @@ export class UserService {
       user.role,
     );
 
-    return histories.map(entity => entity.toDocument());
+    return histories.map(entity => {
+      const history = entity.toDocument()
+      
+      history.results = undefined;
+
+      return history
+    });
   }
 
   async findById(userId: string): Promise<UserEntity> {
