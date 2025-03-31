@@ -17,7 +17,6 @@ export interface IAuthResponse {
   profile: Partial<UserDocument>;
 }
 
-export interface ISessionResultsReponse {
-  history: HistoryDocument;
+export interface ISessionResultsReponse extends Partial<HistoryDocument> {
   summary: Record<number, number>;
 }

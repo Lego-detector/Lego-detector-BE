@@ -11,7 +11,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 
 import { Types } from 'mongoose';
 
-import { FileValidationPipe, JwtAccessGuard } from '../../../common';
+import { FileValidationPipe, JwtAccessGuard, TransformFileInterceptor } from '../../../common';
 import { CurrentUser } from '../../../common/decorators';
 import { ISessionResultsReponse } from '../../../shared';
 import { UserEntity } from '../../user/domain/entities';
@@ -24,6 +24,7 @@ import { DetectorService } from '../services';
 export class DetectorController {
   constructor(private readonly detectorService: DetectorService) {}
 
+  @UseInterceptors(TransformFileInterceptor)
   @UseGuards(JwtAccessGuard)
   @Get('results')
   async getCompletedSession(
@@ -41,6 +42,7 @@ export class DetectorController {
     return this.detectorService.getClassName();
   }
 
+  @UseInterceptors(TransformFileInterceptor)
   @UseGuards(JwtAccessGuard)
   @Post('predict')
   @UseInterceptors(FileInterceptor('image'))

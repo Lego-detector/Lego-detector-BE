@@ -11,6 +11,8 @@ export class RolesGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     const roles = this.reflector.get<string[]>('roles', context.getHandler());
+    
+    console.log(roles)
 
     if (!roles) {
       return true;
@@ -19,7 +21,7 @@ export class RolesGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const user = request.user;
 
-    return this.matchRoles(roles, user.roles?.TEC);
+    return this.matchRoles(roles, user.role);
   }
 
   private matchRoles(roles: string[], userRole: string) {

@@ -18,7 +18,7 @@ import { HistoryService } from './services/history.service';
       { name: History.name, schema: HistorySchema },
       { name: ClassName.name, schema: ClassNameSchema }
     ]),
-    MinioClientModule,
+    forwardRef(() => MinioClientModule),
     forwardRef(() => UserModule)
   ],
   controllers: [DetectorController],

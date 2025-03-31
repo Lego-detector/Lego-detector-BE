@@ -9,7 +9,8 @@ export class ClassNameMapper extends BaseMapper<ClassNameDocument, ClassNameEnti
     return new ClassNameEntity({
       classId: classNameDoc.classId,
       className: classNameDoc.className,
-      label: classNameDoc.label
+      label: classNameDoc.label,
+      color: classNameDoc.color
     });
   }
 }

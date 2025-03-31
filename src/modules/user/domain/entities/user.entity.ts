@@ -1,4 +1,4 @@
-import { generateArgon2Hash, generateSha256Hash, verifyArgon2Hash } from '../../../../shared';
+import { generateArgon2Hash, generateSha256Hash, verifyArgon2Hash, verifySha256Hash } from '../../../../shared';
 import { BaseEntity } from '../../../../shared/base';
 import { UserRole } from '../../../../shared/enum';
 import { UserDocument } from '../../schemas';
@@ -42,11 +42,15 @@ export class UserEntity extends BaseEntity<UserDocument> {
     return verifyArgon2Hash(password, this.password);
   }
 
+  async verifyRefreshToken(refreshToken: string): Promise<boolean> {
+    return verifySha256Hash(refreshToken, this.refreshToken);
+  }
+
   updateRefreshToken(refreshToken: string): void {
     this.refreshToken = generateSha256Hash(refreshToken);
   }
 
   revokeRefreshToken(): void {
-    this.refreshToken = undefined;
+    this.refreshToken = null;
   }
 }

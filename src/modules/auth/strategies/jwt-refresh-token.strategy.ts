@@ -31,7 +31,7 @@ export class JwtRefreshTokenStrategy extends PassportStrategy(Strategy, 'jwt-ref
     const user = await this.usersService.findById(payload.sub);
 
     if (!user?.refreshToken) {
-      throw new ErrorException(CODES.AGW_002);
+      throw new ErrorException(CODES.UNAUTHORIZED);
     }
 
     const isRefreshTokenMatch = await verifySha256Hash(

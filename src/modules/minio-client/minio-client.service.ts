@@ -1,5 +1,3 @@
-import * as path from 'path';
-
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
@@ -43,7 +41,8 @@ export class MinioClientService {
       throw new ErrorException(CODES.MIMETYPE_MISMATCH);
     }
 
-    const ext = path.extname(file.originalname);
+    const mime = file.mimetype.split('/', 2).pop()
+    const ext = mime ? `.${mime}` : '';
     const fileName = fixedFileName ? fixedFileName : this.generateFileName(file);
     const objectName = `${directoryName}/${fileName}${suffixFileName}${ext}`;
 
@@ -74,6 +73,21 @@ export class MinioClientService {
 
       throw error;
     }
+  }
+
+  async getFileUrl(fileName: string): Promise<string> {
+    const url = await this.minioClient.presignedUrl(
+      'GET',
+      this.bucketName,
+      fileName,
+      7 * 24 * 60 * 60,
+    );
+
+    if (!url) {
+      throw new ErrorException(CODES.FILE_NOT_FOUND);
+    }
+
+    return url;
   }
 
   private async uploadFile(filename: string, buffer: Buffer, size: number): Promise<void> {

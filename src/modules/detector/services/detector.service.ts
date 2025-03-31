@@ -1,11 +1,7 @@
 import { Inject, Injectable, Logger, forwardRef } from '@nestjs/common';
-import { InjectConnection } from '@nestjs/mongoose';
-
-import { Connection } from 'mongoose';
 
 import { ErrorException } from '../../../common';
 import { CODES, ISessionResultsReponse, UserRole } from '../../../shared';
-import { MinioClientService } from '../../minio-client';
 import { UserService } from '../../user/services';
 import { ClassNameRepository } from '../repositories/className.repository';
 import { BoundingBoxDocument, ClassNameDocument, HistoryDocument } from '../schemas';
@@ -17,11 +13,8 @@ import { HistoryService } from './history.service';
 export class DetectorService {
   private readonly logger: Logger = new Logger(DetectorService.name);
   constructor(
-    @InjectConnection()
-    private readonly mongoConnection: Connection,
     private readonly historyService: HistoryService,
     private readonly classNameRepository: ClassNameRepository,
-    private readonly minioService: MinioClientService,
 
     @Inject(forwardRef(() => UserService))
     private readonly userService: UserService
@@ -47,7 +40,7 @@ export class DetectorService {
     history.expireIndex = undefined;
 
     return {
-      history: history.toDocument(),
+      ...history.toDocument(),
       summary: this.summaryInferenceResults(history.results)
     }
   }

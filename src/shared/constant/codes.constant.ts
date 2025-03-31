@@ -98,4 +98,9 @@ export const CODES: ICodeObj = {
     display: 'ไม่สามารถอัพโหลดไฟล์ได้',
     statusCode: HttpStatus.SERVICE_UNAVAILABLE,
   },
+  FILE_NOT_FOUND: {
+    message: 'File not found.',
+    display: 'ไม่พบไฟล์ในระบบ',
+    statusCode: HttpStatus.NOT_FOUND,
+  },
 };

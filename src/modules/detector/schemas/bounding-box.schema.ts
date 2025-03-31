@@ -23,6 +23,9 @@ export class ClassName {
 
   @Prop({ required: true })
   label: string;
+
+  @Prop({ required: true })
+  color: string;
 }
 
 @Schema({

@@ -1,8 +1,10 @@
-import { Body, Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-import { FileValidationPipe } from '../../../common';
-import { IAuthResponse } from '../../../shared';
+import { FileValidationPipe, JwtAccessGuard, JwtRefreshGuard } from '../../../common';
+import { CurrentUser } from '../../../common/decorators';
+import { IAuthResponse, ICredentials } from '../../../shared';
+import { UserEntity } from '../../user/domain/entities';
 import { LocalSignInDto, LocalSignUpDto } from '../dto';
 import { AuthService } from '../services';
 
@@ -23,5 +25,25 @@ export class AuthController {
     @Body() localSignUpDto: LocalSignUpDto,
   ): Promise<IAuthResponse> {
     return this.authService.signUp(localSignUpDto, profileImage);
+  }
+
+  @Post('refresh')
+  @UseGuards(JwtRefreshGuard)
+  async refreshAccessToken(
+    @CurrentUser() user: UserEntity,
+    @Body('refreshToken') refreshToken: string
+  ): Promise<ICredentials> {
+    return this.authService.refreshAccessToken(
+      user,
+      refreshToken
+    )
+  }
+
+  @Post('revoke')
+  @UseGuards(JwtAccessGuard)
+  async revokeToken(
+    @CurrentUser() user: UserEntity
+  ): Promise<void> {
+    return this.authService.revokeToken(user);
   }
 }
