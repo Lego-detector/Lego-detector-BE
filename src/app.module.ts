@@ -1,19 +1,45 @@
 import { Module } from '@nestjs/common';
-import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { MongooseModule } from '@nestjs/mongoose';
 
-import { configuration } from './config';
-import { LegoDetectorModule } from './lego-detector/lego-detector.module';
+import { AppService } from './app.service';
+import { ENV, envObject } from './config';
+import {
+  DetectorModule,
+  InferenceEventConsumerModule,
+  MSGRelayModule,
+  MinioClientModule,
+  RabbitMqModule,
+  UserModule,
+} from './modules';
+import { AdminModule } from './modules/admin/admin.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
-  imports: [    
+  imports: [
     ConfigModule.forRoot({
-      validationSchema: configuration,
+      validationSchema: envObject,
       isGlobal: true,
-    }), LegoDetectorModule,
+    }),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>(ENV.MONGO_URI),
+        verboseRetryLog: true,
+      }),
+      inject: [ConfigService],
+    }),
+    EventEmitterModule.forRoot(),
+    MinioClientModule,
+    DetectorModule,
+    UserModule,
+    AdminModule,
+    MSGRelayModule,
+    InferenceEventConsumerModule,
+    RabbitMqModule,
+    AuthModule,
   ],
-  providers: [
-    AppService
-  ],
+  providers: [AppService],
 })
 export class AppModule {}
